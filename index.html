@@ -795,7 +795,7 @@ async function checkRecurringTasks(){
     if(t.claimed){
       // completed — fresh reset for the new occurrence
       t.count=0; t.claimed=false; t.lastResetDate=today; t.originDate=today;
-      if(t.subtasks) t.subtasks.forEach(s=>s.done=false);
+      if(t.subtasks) t.subtasks.forEach(s=>{s.done=false; s.rewarded=false;});
       await dbPut('tasks', t);
     } else if(wasIncomplete && t.remaining){
       // carry over as-is, just mark it as processed for today; originDate stays put so the card can show "From <date>"
@@ -804,7 +804,7 @@ async function checkRecurringTasks(){
     } else {
       // not remaining and incomplete — clears with no reward, replaced by a fresh occurrence
       t.count=0; t.claimed=false; t.lastResetDate=today; t.originDate=today;
-      if(t.subtasks) t.subtasks.forEach(s=>s.done=false);
+      if(t.subtasks) t.subtasks.forEach(s=>{s.done=false; s.rewarded=false;});
       await dbPut('tasks', t);
     }
   }
@@ -1231,7 +1231,17 @@ async function toggleSubtask(taskId, subId){
   const s=t.subtasks.find(x=>x.id===subId); if(!s) return;
   s.done=!s.done;
   t.target=t.subtasks.length; t.count=t.subtasks.filter(x=>x.done).length;
-  await dbPut('tasks',t); renderTasks(); renderCategoryTabs();
+
+  if(s.done && !s.rewarded){
+    const per=Math.floor(t.reward / t.subtasks.length);
+    const isLast = t.count===t.target;
+    const payout = isLast ? (t.reward - per*(t.subtasks.length-1)) : per;
+    s.rewarded=true;
+    if(payout>0){ await addCurrency(payout); showToast(`+${payout}`); }
+  }
+  if(t.count>=t.target && !t.claimed){ t.claimed=true; }
+
+  await dbPut('tasks',t); renderTasks(); renderCategoryTabs(); updateLessonPill();
 }
 async function claimTask(id){ const t=state.tasks.find(x=>x.id===id); if(!t||t.claimed) return; t.claimed=true; await dbPut('tasks',t); await addCurrency(t.reward); renderTasks(); renderCategoryTabs(); showToast(`+${t.reward} claimed!`); }
 async function deleteTask(id){ await dbDelete('tasks',id); state.tasks=state.tasks.filter(t=>t.id!==id); renderTasks(); renderCategoryTabs(); }
@@ -1278,7 +1288,7 @@ document.getElementById('addSubtaskBtn').addEventListener('click', addPendingSub
 document.getElementById('newSubtaskInput').addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); addPendingSubtask(); } });
 function addPendingSubtask(){
   const input=document.getElementById('newSubtaskInput'); const text=input.value.trim(); if(!text) return;
-  pendingSubtasks.push({id:uid(), text, done:false}); input.value=''; renderSubtaskEditor();
+  pendingSubtasks.push({id:uid(), text, done:false, rewarded:false}); input.value=''; renderSubtaskEditor();
 }
 document.getElementById('taskRepeatSelect').addEventListener('change', updateRepeatFieldVisibility);
 function updateRepeatFieldVisibility(){
