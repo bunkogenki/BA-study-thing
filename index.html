@@ -411,12 +411,12 @@
       <div class="hud-bottom">
         <div class="bottom-nav">
           <div class="nav-item"><div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9h14v6a4 4 0 01-4 4H7a4 4 0 01-4-4V9z"/><path d="M17 10h2a2 2 0 010 4h-2"/><path d="M6 2v3M10 2v3"/></svg></div><span>Cafe</span></div>
-          <div class="nav-item"><div class="float-pill">In Progress</div><div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V6a2 2 0 012-2h9l5 5v10a2 2 0 01-2 2H6a2 2 0 01-2-2z"/><path d="M9 9h6M9 13h6M9 17h3"/></svg></div><span>Lesson</span></div>
+          <div class="nav-item clickable" id="lessonNav"><div class="float-pill" id="lessonPill">In Progress</div><div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V6a2 2 0 012-2h9l5 5v10a2 2 0 01-2 2H6a2 2 0 01-2-2z"/><path d="M9 9h6M9 13h6M9 17h3"/></svg></div><span>Lesson</span></div>
           <div class="nav-item clickable" id="studentsNav"><div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="7" r="3"/><circle cx="17" cy="8" r="2.5"/><path d="M2 21v-1a6 6 0 0110-4.5"/><path d="M14 21v-1a5 5 0 018 0v1"/></svg></div><span>Students</span></div>
-          <div class="nav-item"><div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="10" width="7" height="10"/><rect x="14" y="6" width="7" height="14"/></svg></div><span>Formation</span></div>
+          <div class="nav-item clickable" id="formationNav"><div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="10" width="7" height="10"/><rect x="14" y="6" width="7" height="14"/></svg></div><span>Formation</span></div>
           <div class="nav-item"><div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.5 8.5 0 01-12.9 7.3L3 20l1.3-5A8.5 8.5 0 1121 11.5z"/></svg></div><span>Social</span></div>
           <div class="nav-item"><div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.7 6.3a1 1 0 010 1.4l-7 7a1 1 0 01-1.4 0l-2-2a1 1 0 010-1.4l7-7a1 1 0 011.4 0z"/><path d="M3 21l3-1 8-8-2-2-8 8z"/></svg></div><span>Crafting</span></div>
-          <div class="nav-item clickable" id="shopNav"><div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l1-5h16l1 5"/><path d="M4 9h16v9a2 2 0 01-2 2H6a2 2 0 01-2-2z"/><path d="M9 13a3 3 0 006 0"/></svg></div><span>Shop</span></div>
+          <div class="nav-item"><div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l1-5h16l1 5"/><path d="M4 9h16v9a2 2 0 01-2 2H6a2 2 0 01-2-2z"/><path d="M9 13a3 3 0 006 0"/></svg></div><span>Shop</span></div>
           <div class="nav-item clickable" id="recruitNav"><div class="float-pill orange">Unique!</div><div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8l9-5 9 5-9 5-9-5z"/><path d="M3 8v8l9 5 9-5V8"/></svg></div><span>Recruit</span></div>
           <div class="nav-item campaign"><div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg></div><span>Campaign</span></div>
         </div>
@@ -580,7 +580,7 @@
   <!-- ===== MODAL: shop (wallpaper collection) ===== -->
   <div class="modal-overlay" id="shopModal">
     <div class="modal-box wide">
-      <h2>Shop</h2>
+      <h2>Formation — Wallpapers</h2>
       <div class="collection-h">Owned</div>
       <div class="collection-grid" id="ownedWpGrid"></div>
       <div class="collection-h">Not Owned</div>
@@ -629,6 +629,12 @@
       <div class="field" id="repeatMonthdayField" style="display:none;">
         <label>Day of month</label>
         <input type="number" id="taskRepeatMonthday" min="1" max="31" value="1">
+      </div>
+      <div class="field" id="remainingField" style="display:none;">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+          <input type="checkbox" id="taskRemainingCheckbox" style="width:16px;height:16px;accent-color:var(--blue-accent);">
+          Remaining — if not completed, carry it over to the next day instead of clearing it
+        </label>
       </div>
 
       <div class="modal-actions">
@@ -728,12 +734,18 @@ let state = {
   wallpapers:[], wallpaperIndex:0, currency:0,
   categories:[], activeCategory:'all', tasks:[],
   characters:[], activeCharacterId:null, dialogues:[],
-  rarities:[], pool:[], treats:[],
+  rarities:[], pool:[], treats:[], dailyBonusClaimedDate:'',
 };
 const DEFAULT_CATEGORIES=[{id:'daily',name:'Daily',color:'daily'},{id:'weekly',name:'Weekly',color:'weekly'},{id:'monthly',name:'Monthly',color:'monthly'},{id:'achievement',name:'Long Term',color:'achievement'}];
 const WEEKDAY_NAMES=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 function todayStr(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
 function daysInMonth(y,m){ return new Date(y,m+1,0).getDate(); }
+function formatShortDate(dateStr){
+  if(!dateStr) return '';
+  const [y,m,d]=dateStr.split('-').map(Number);
+  const dt=new Date(y,m-1,d);
+  return dt.toLocaleDateString(undefined,{month:'short',day:'numeric'});
+}
 const DEFAULT_RARITIES=[{id:'n',name:'N',rate:60,color:'#8891a3'},{id:'r',name:'R',rate:30,color:'#3d8bfd'},{id:'sr',name:'SR',rate:8,color:'#7c5cff'},{id:'ssr',name:'SSR',rate:2,color:'#ffd23f'}];
 let pendingCrop={zoom:100,posY:50};
 let pendingPoolFiles=[]; // {tempId, file, dataURL, mime, kind, rarityId, name}
@@ -755,6 +767,8 @@ async function boot(){
   state.activeCharacterId = activeIdRow ? activeIdRow.value : (state.characters[0]?.id || null);
   const curRow=await dbGet('meta','currency');
   state.currency = curRow ? curRow.value : 0;
+  const bonusRow=await dbGet('meta','dailyBonusClaimedDate');
+  state.dailyBonusClaimedDate = bonusRow ? bonusRow.value : '';
 
   await checkRecurringTasks();
 
@@ -776,12 +790,21 @@ async function checkRecurringTasks(){
       const targetDay=Math.min(t.recurrence.dayOfMonth, dim);
       due = now.getDate()===targetDay;
     }
-    if(due && (t.claimed || t.count>0)){
-      t.count=0; t.claimed=false; t.lastResetDate=today;
+    if(!due) continue;
+    const wasIncomplete = !t.claimed;
+    if(t.claimed){
+      // completed — fresh reset for the new occurrence
+      t.count=0; t.claimed=false; t.lastResetDate=today; t.originDate=today;
       if(t.subtasks) t.subtasks.forEach(s=>s.done=false);
       await dbPut('tasks', t);
-    } else if(due){
+    } else if(wasIncomplete && t.remaining){
+      // carry over as-is, just mark it as processed for today; originDate stays put so the card can show "From <date>"
       t.lastResetDate=today;
+      await dbPut('tasks', t);
+    } else {
+      // not remaining and incomplete — clears with no reward, replaced by a fresh occurrence
+      t.count=0; t.claimed=false; t.lastResetDate=today; t.originDate=today;
+      if(t.subtasks) t.subtasks.forEach(s=>s.done=false);
       await dbPut('tasks', t);
     }
   }
@@ -802,6 +825,13 @@ function switchView(id){
   if(id==='gachaView'){ renderRarityRatesRow(); renderCollectionSummary(); }
 }
 document.getElementById('taskIcon').addEventListener('click', ()=>switchView('tasksView'));
+document.getElementById('lessonNav').addEventListener('click', ()=>switchView('tasksView'));
+function updateLessonPill(){
+  const dailyTasks = state.tasks.filter(t=>t.categoryId==='daily');
+  const allDone = dailyTasks.length>0 && dailyTasks.every(t=>t.claimed);
+  const pill=document.getElementById('lessonPill');
+  if(pill) pill.style.display = allDone ? 'none' : '';
+}
 document.getElementById('backToHome1').addEventListener('click', ()=>switchView('homeView'));
 document.getElementById('homeIconBtn1').addEventListener('click', ()=>switchView('homeView'));
 document.getElementById('backToHome2').addEventListener('click', ()=>switchView('homeView'));
@@ -879,7 +909,8 @@ function activeCharacter(){ return state.characters.find(c=>c.id===state.activeC
 function applyCharCrop(imgEl, character){
   if(!imgEl||!character) return;
   const zoom=(character.zoom||100)/100, posY=character.posY!=null?character.posY:50;
-  imgEl.style.objectPosition=`center ${posY}%`; imgEl.style.transform=`scale(${zoom})`; imgEl.style.transformOrigin='center center';
+  imgEl.style.transformOrigin=`center ${posY}%`;
+  imgEl.style.transform=`scale(${zoom})`;
 }
 function renderCharacter(){
   const wrap=document.getElementById('charImgWrap'); wrap.innerHTML='';
@@ -1015,7 +1046,7 @@ function updateTreatsBadge(){
 /* Students = character collection, Shop = wallpaper collection */
 document.getElementById('studentsNav').addEventListener('click', openStudentsModal);
 document.getElementById('closeStudentsModal').addEventListener('click', ()=>document.getElementById('studentsModal').classList.remove('active'));
-document.getElementById('shopNav').addEventListener('click', openShopModal);
+document.getElementById('formationNav').addEventListener('click', openShopModal);
 document.getElementById('closeShopModal').addEventListener('click', ()=>document.getElementById('shopModal').classList.remove('active'));
 
 function openStudentsModal(){
@@ -1120,6 +1151,7 @@ function renderTasks(){
         t.recurrence.type==='daily' ? 'Daily repeat' :
         t.recurrence.type==='weekly' ? `Weekly · ${WEEKDAY_NAMES[t.recurrence.weekday].slice(0,3)}` :
         `Monthly · day ${t.recurrence.dayOfMonth}`;
+      const carriedOver = t.originDate && t.originDate!==todayStr() && !t.claimed;
       const subtaskRows = hasSubtasks ? t.subtasks.map(s=>`
         <div class="subtask-row${s.done?' done':''}"><input type="checkbox" data-subtask="${t.id}|${s.id}" ${s.done?'checked':''}><span>${escapeHtml(s.text)}</span></div>
       `).join('') : '';
@@ -1131,6 +1163,7 @@ function renderTasks(){
             <span class="task-tag tag-${cat?cat.color:'custom'}">${cat?cat.name:'Task'}</span>
             <span class="task-title">${escapeHtml(t.title)}</span>
             ${repeatLabel?`<span class="task-repeat-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 12a9 9 0 11-3-6.7"/><path d="M21 3v6h-6"/></svg>${repeatLabel}</span>`:''}
+            ${carriedOver?`<span class="task-repeat-badge" style="color:#e0455a;">From ${formatShortDate(t.originDate)}</span>`:''}
           </div>
           ${hasSubtasks?`<div class="subtask-toggle" data-toggle="${t.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M9 6l6 6-6 6"/></svg>${effCount}/${effTarget} subtasks</div>
           <div class="subtask-list" id="subtasks-${t.id}">${subtaskRows}</div>`
@@ -1159,28 +1192,32 @@ function renderTasks(){
       toggleSubtask(taskId, subId);
     }));
   }
-  renderFooterRow(); updateTaskBadge();
+  renderFooterRow(); updateTaskBadge(); updateLessonPill();
 }
+const DAILY_BONUS_AMOUNT=60;
 function renderFooterRow(){
-  const relevant = state.activeCategory==='all' ? state.tasks : state.tasks.filter(t=>t.categoryId===state.activeCategory);
+  const dailyTasks = state.tasks.filter(t=>t.categoryId==='daily');
   const row=document.getElementById('footerRow');
-  if(relevant.length===0){ row.style.display='none'; return; }
+  if(dailyTasks.length===0){ row.style.display='none'; return; }
   row.style.display='flex';
-  const claimed=relevant.filter(t=>t.claimed).length;
-  const claimableNow=relevant.filter(t=>t.count>=t.target && !t.claimed);
-  const total=relevant.length;
-  document.getElementById('claimAllTitle').textContent = state.activeCategory==='all' ? 'Complete tasks to earn rewards' : `Complete ${categoryFor(state.activeCategory)?.name||''} tasks`;
+  const claimed=dailyTasks.filter(t=>t.claimed).length;
+  const total=dailyTasks.length;
+  const allDone = total>0 && claimed===total;
+  const bonusAlreadyClaimed = state.dailyBonusClaimedDate===todayStr();
+  document.getElementById('claimAllTitle').textContent = 'Complete all Daily tasks';
   document.getElementById('claimAllCount').textContent = `Count ${claimed}/${total}`;
   document.getElementById('claimAllProgress').style.width = `${total?Math.round((claimed/total)*100):0}%`;
-  const rewardSum=claimableNow.reduce((s,t)=>s+t.reward,0);
-  document.getElementById('claimAllReward').textContent=`x${rewardSum}`;
+  document.getElementById('claimAllReward').textContent=`x${DAILY_BONUS_AMOUNT}`;
   const btn=document.getElementById('claimAllBtn');
-  btn.disabled = claimableNow.length===0;
+  btn.textContent = bonusAlreadyClaimed ? 'Claimed' : 'Claim All';
+  btn.disabled = !allDone || bonusAlreadyClaimed;
   btn.onclick=async()=>{
-    let sum=0;
-    for(const t of claimableNow){ t.claimed=true; await dbPut('tasks',t); sum+=t.reward; }
-    if(sum){ await addCurrency(sum); showToast(`+${sum} claimed!`); }
-    renderTasks(); renderCategoryTabs();
+    if(!allDone || bonusAlreadyClaimed) return;
+    state.dailyBonusClaimedDate=todayStr();
+    await dbPut('meta',{key:'dailyBonusClaimedDate', value: state.dailyBonusClaimedDate});
+    await addCurrency(DAILY_BONUS_AMOUNT);
+    showToast(`+${DAILY_BONUS_AMOUNT} claimed!`);
+    renderFooterRow(); updateLessonPill();
   };
 }
 function updateTaskBadge(){
@@ -1218,6 +1255,7 @@ function openTaskModal(taskId){
   document.getElementById('taskRepeatSelect').value = rec.type;
   document.getElementById('taskRepeatWeekday').value = rec.weekday!=null ? rec.weekday : new Date().getDay();
   document.getElementById('taskRepeatMonthday').value = rec.dayOfMonth || new Date().getDate();
+  document.getElementById('taskRemainingCheckbox').checked = t ? !!t.remaining : false;
   updateRepeatFieldVisibility();
   document.getElementById('taskModal').classList.add('active');
 }
@@ -1247,6 +1285,7 @@ function updateRepeatFieldVisibility(){
   const val=document.getElementById('taskRepeatSelect').value;
   document.getElementById('repeatWeekdayField').style.display = val==='weekly' ? 'block' : 'none';
   document.getElementById('repeatMonthdayField').style.display = val==='monthly' ? 'block' : 'none';
+  document.getElementById('remainingField').style.display = val==='none' ? 'none' : 'block';
 }
 document.getElementById('cancelTaskBtn').addEventListener('click', ()=>document.getElementById('taskModal').classList.remove('active'));
 document.getElementById('saveTaskBtn').addEventListener('click', async()=>{
@@ -1254,6 +1293,7 @@ document.getElementById('saveTaskBtn').addEventListener('click', async()=>{
   const categoryId=document.getElementById('taskCategorySelect').value;
   const reward=Math.max(0, parseInt(document.getElementById('taskRewardInput').value)||0);
   const repeatType=document.getElementById('taskRepeatSelect').value;
+  const remaining=document.getElementById('taskRemainingCheckbox').checked;
   const recurrence = repeatType==='none' ? {type:'none'}
     : repeatType==='weekly' ? {type:'weekly', weekday:parseInt(document.getElementById('taskRepeatWeekday').value)}
     : repeatType==='monthly' ? {type:'monthly', dayOfMonth:Math.max(1,Math.min(31,parseInt(document.getElementById('taskRepeatMonthday').value)||1))}
@@ -1261,14 +1301,14 @@ document.getElementById('saveTaskBtn').addEventListener('click', async()=>{
 
   if(editingTaskId){
     const t=state.tasks.find(x=>x.id===editingTaskId); if(!t) return;
-    t.title=title; t.categoryId=categoryId; t.reward=reward; t.recurrence=recurrence;
+    t.title=title; t.categoryId=categoryId; t.reward=reward; t.recurrence=recurrence; t.remaining=remaining;
     t.subtasks = pendingSubtasks.length ? pendingSubtasks : undefined;
     if(pendingSubtasks.length){ t.target=pendingSubtasks.length; t.count=pendingSubtasks.filter(s=>s.done).length; }
     else { t.target=Math.max(1, parseInt(document.getElementById('taskTargetInput').value)||1); t.count=Math.min(t.count,t.target); }
     await dbPut('tasks',t);
   } else {
     const target = pendingSubtasks.length ? pendingSubtasks.length : Math.max(1, parseInt(document.getElementById('taskTargetInput').value)||1);
-    const task={id:uid(),title,categoryId,target,reward,count:0,claimed:false,createdAt:Date.now(),
+    const task={id:uid(),title,categoryId,target,reward,count:0,claimed:false,createdAt:Date.now(),remaining,originDate:todayStr(),
       subtasks: pendingSubtasks.length ? pendingSubtasks : undefined, recurrence, lastResetDate: todayStr()};
     await dbPut('tasks',task); state.tasks.push(task);
   }
@@ -1306,7 +1346,7 @@ function weightedRarityPick(){
 async function relockSourcePool(sourcePoolId){
   if(!sourcePoolId) return;
   const item=state.pool.find(p=>p.id===sourcePoolId);
-  if(item){ item.unlocked=false; await dbPut('pool',item); }
+  if(item){ await dbDelete('pool', item.id); state.pool=state.pool.filter(p=>p.id!==item.id); }
   renderCollectionSummary();
 }
 async function unlockPoolItem(item){
@@ -1315,7 +1355,7 @@ async function unlockPoolItem(item){
     const wp={id:uid(), dataURL:item.dataURL, type:item.mime||'image/png', sourcePoolId:item.id};
     await dbPut('wallpapers',wp); state.wallpapers.push(wp); renderWallpaper();
   } else if(item.kind==='character'){
-    const ch={id:uid(), imageDataURL:item.dataURL, name:item.name||'', zoom:100, posY:50, sourcePoolId:item.id};
+    const ch={id:uid(), imageDataURL:item.dataURL, name:item.name||'', zoom:65, posY:35, sourcePoolId:item.id};
     await dbPut('characters',ch); state.characters.push(ch);
     if(!state.activeCharacterId){ state.activeCharacterId=ch.id; await dbPut('meta',{key:'activeCharacterId',value:ch.id}); }
     renderCharacter();
@@ -1514,6 +1554,25 @@ function renderPoolList(){
 }
 
 document.querySelectorAll('.modal-overlay').forEach(ov=>{ ov.addEventListener('click', e=>{ if(e.target===ov) ov.classList.remove('active'); }); });
+
+function trueRandomInt(maxExclusive){
+  if(window.crypto && window.crypto.getRandomValues){
+    const buf=new Uint32Array(1);
+    window.crypto.getRandomValues(buf);
+    return Math.floor((buf[0]/4294967296)*maxExclusive);
+  }
+  return Math.floor(Math.random()*maxExclusive);
+}
+function startWallpaperAutoRotate(){
+  setInterval(()=>{
+    if(state.wallpapers.length<2) return;
+    let next;
+    do{ next=trueRandomInt(state.wallpapers.length); }while(next===state.wallpaperIndex);
+    state.wallpaperIndex=next;
+    renderWallpaper();
+  }, 10*60*1000);
+}
+startWallpaperAutoRotate();
 
 boot();
 </script>
