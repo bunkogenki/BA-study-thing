@@ -9,281 +9,202 @@
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --navy: #16233f;
-    --navy-2: #101a30;
-    --blue-accent: #3d8bfd;
-    --blue-accent-dark: #2a6fd6;
-    --bg-soft: #eef2f7;
-    --panel-white: #ffffff;
-    --pill-bg: rgba(255,255,255,0.94);
-    --pill-border: #e2e6ee;
-    --yellow: #ffd23f;
-    --yellow-dark: #f5a623;
-    --gold-text: #c9962c;
-    --green-ap: #38c76a;
-    --gem-blue: #4aa8ff;
-    --pink-badge: #ff5fa2;
-    --pink-badge-bg: #ffe1ee;
-    --orange-tag: #ff8a3d;
-    --orange-tag-bg: #fff0e2;
-    --daily-tag: #3d8bfd;
-    --daily-tag-bg: #e4f0ff;
-    --weekly-tag: #7c5cff;
-    --weekly-tag-bg: #ece5ff;
-    --custom-tag: #2bb3a3;
-    --custom-tag-bg: #e0f7f3;
-    --text-dark: #1c2740;
-    --text-mid: #5b6478;
-    --text-soft: #8891a3;
-    --radius-lg: 20px;
-    --radius-md: 14px;
-    --shadow-card: 0 4px 14px rgba(20,30,60,0.08), 0 1px 3px rgba(20,30,60,0.06);
-    --shadow-pop: 0 10px 30px rgba(20,30,60,0.2);
-    --shadow-float: 0 4px 12px rgba(0,0,0,0.18);
+    --navy:#16233f; --navy-2:#0f1a30;
+    --blue-accent:#3d8bfd; --blue-accent-dark:#2a6fd6;
+    --bg-soft:#eef2f7; --panel-white:#ffffff;
+    --pill-bg:rgba(255,255,255,0.92); --pill-border:#e2e6ee;
+    --yellow:#ffd23f; --yellow-dark:#f5a623; --gold-text:#c9962c;
+    --green-ap:#38c76a; --gem-blue:#4aa8ff;
+    --pink-badge:#ff5fa2; --orange-tag:#ff8a3d; --orange-tag-bg:#fff0e2;
+    --daily-tag:#3d8bfd; --daily-tag-bg:#e4f0ff;
+    --weekly-tag:#7c5cff; --weekly-tag-bg:#ece5ff;
+    --custom-tag:#2bb3a3; --custom-tag-bg:#e0f7f3;
+    --text-dark:#1c2740; --text-mid:#5b6478; --text-soft:#8891a3;
+    --radius-lg:20px; --radius-md:14px;
+    --shadow-card:0 4px 14px rgba(20,30,60,0.08), 0 1px 3px rgba(20,30,60,0.06);
+    --shadow-pop:0 10px 30px rgba(20,30,60,0.2);
+    --shadow-float:0 3px 10px rgba(0,0,0,0.16);
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;height:100%;overflow:hidden;}
-  body{
-    font-family:'Nunito',sans-serif;
-    background:#0c1220;
-    color:var(--text-dark);
-    -webkit-font-smoothing:antialiased;
-  }
+  body{font-family:'Nunito',sans-serif;background:#0c1220;color:var(--text-dark);-webkit-font-smoothing:antialiased;}
   .app-shell{width:100%;height:100vh;position:relative;overflow:hidden;}
   .view{position:absolute;inset:0;display:none;flex-direction:column;}
   .view.active{display:flex;}
-  button, input, select, textarea{font-family:inherit;}
+  button,input,select{font-family:inherit;}
 
-  /* ========================================================
-     HOME VIEW
-  ======================================================== */
+  /* ===================== HOME ===================== */
   #homeView{background:#0c1220;}
   .wallpaper-layer{position:absolute;inset:0;background:#0c1220;}
-  .wallpaper-layer img, .wallpaper-layer video{width:100%;height:100%;object-fit:cover;display:block;}
-  .wallpaper-empty{
-    position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
-    color:#7a8bb0;gap:10px;text-align:center;padding:24px;
-  }
-  .wallpaper-empty svg{opacity:.5;width:44px;height:44px;}
-  .wallpaper-empty b{font-family:'Baloo 2';color:#cfd9ee;font-size:16px;}
-  .wallpaper-empty small{font-size:12.5px;}
+  .wallpaper-layer img,.wallpaper-layer video{width:100%;height:100%;object-fit:cover;display:block;}
+  .wallpaper-empty{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#7a8bb0;gap:8px;text-align:center;padding:24px;}
+  .wallpaper-empty svg{opacity:.5;width:42px;height:42px;}
+  .wallpaper-empty b{font-family:'Baloo 2';color:#cfd9ee;font-size:15px;}
+  .wallpaper-empty small{font-size:12px;}
 
   .hud{position:relative;z-index:5;height:100%;display:flex;flex-direction:column;pointer-events:none;}
   .hud > *{pointer-events:auto;}
 
-  .hud-top{display:flex;align-items:flex-start;padding:14px 16px 0;gap:12px;}
   .level-box{
-    background:linear-gradient(160deg,#1e3057,var(--navy-2));
-    padding:9px 20px 10px 16px;border-radius:0 16px 16px 0;
-    min-width:210px;flex-shrink:0;box-shadow:var(--shadow-float);
+    position:absolute;top:0;left:0;
+    background:linear-gradient(155deg,#20335c,#0f1a30);
+    padding:8px 26px 10px 14px;border-radius:0 0 18px 0;min-width:190px;box-shadow:var(--shadow-float);
   }
-  .level-top{display:flex;align-items:flex-end;gap:10px;}
-  .level-left{display:flex;flex-direction:column;line-height:.95;}
-  .lv-label{color:var(--yellow);font-size:11px;font-weight:800;font-family:'Baloo 2';}
-  .lv-value{color:#fff;font-size:26px;font-weight:800;font-family:'Baloo 2';}
-  .level-right{display:flex;flex-direction:column;line-height:1.2;padding-bottom:2px;}
-  .level-name{color:#fff;font-size:17px;font-weight:700;font-family:'Baloo 2';}
-  .level-max{color:var(--yellow);font-size:10.5px;font-weight:800;letter-spacing:.5px;margin-top:1px;}
-  .level-progress-track{margin-top:7px;height:5px;border-radius:99px;background:rgba(255,255,255,.18);overflow:hidden;}
+  .level-top{display:flex;align-items:flex-end;gap:9px;}
+  .level-left{display:flex;flex-direction:column;line-height:.85;}
+  .lv-label{color:var(--yellow);font-size:12px;font-weight:800;font-family:'Baloo 2';}
+  .lv-value{color:#fff;font-size:32px;font-weight:800;font-family:'Baloo 2';}
+  .level-right{display:flex;flex-direction:column;line-height:1.15;padding-bottom:3px;}
+  .level-name{color:#fff;font-size:21px;font-weight:700;font-family:'Baloo 2';}
+  .level-max{color:var(--yellow);font-size:11px;font-weight:800;letter-spacing:.5px;}
+  .level-progress-track{margin-top:6px;height:5px;border-radius:99px;background:rgba(255,255,255,.18);overflow:hidden;}
   .level-progress-fill{height:100%;background:linear-gradient(90deg,#ffe27a,var(--yellow));}
 
-  .hud-top-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex:1;}
-  .stat-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end;}
-  .stat-pill-group{display:flex;align-items:center;}
+  .hud-topright{position:absolute;top:12px;right:14px;display:flex;flex-direction:column;align-items:flex-end;gap:7px;}
+  .stat-row{display:flex;align-items:center;gap:8px;}
+  .stat-group{display:flex;align-items:center;gap:3px;}
   .stat-pill{
-    background:var(--pill-bg);border-radius:999px;padding:6px 12px 6px 10px;
-    display:flex;align-items:center;gap:6px;font-family:'Baloo 2';font-weight:700;font-size:13.5px;
-    color:var(--text-dark);box-shadow:var(--shadow-float);
+    background:var(--pill-bg);border-radius:9px;padding:6px 10px;display:flex;align-items:center;gap:6px;
+    font-family:'Baloo 2';font-weight:700;font-size:14px;color:var(--text-dark);box-shadow:var(--shadow-float);
   }
   .stat-pill .ico{width:15px;height:15px;flex-shrink:0;}
-  .stat-pill.ap .ico{color:var(--green-ap);}
-  .stat-pill.gold .ico{color:var(--gold-text);}
-  .stat-pill.gem .ico{color:var(--gem-blue);}
-  .plus-circle{
-    width:20px;height:20px;border-radius:50%;background:var(--blue-accent);
-    display:flex;align-items:center;justify-content:center;color:#fff;
-    margin-left:-9px;box-shadow:0 2px 5px rgba(0,0,0,0.25);border:1.5px solid #fff;flex-shrink:0;
+  .stat-pill.ap .ico{color:var(--green-ap);} .stat-pill.gold .ico{color:var(--gold-text);} .stat-pill.gem .ico{color:var(--gem-blue);}
+  .plus-square{
+    width:26px;height:26px;border-radius:8px;background:#e5f1ff;color:var(--blue-accent);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;box-shadow:var(--shadow-float);
   }
-  .plus-circle svg{width:10px;height:10px;}
-  .avatar-icons{display:flex;align-items:center;gap:8px;}
+  .plus-square svg{width:11px;height:11px;}
   .avatar-icon{
-    width:32px;height:32px;border-radius:50%;background:var(--pill-bg);
-    display:flex;align-items:center;justify-content:center;color:var(--navy);position:relative;
-    box-shadow:var(--shadow-float);cursor:pointer;
+    width:38px;height:38px;border-radius:10px;background:var(--pill-bg);display:flex;align-items:center;justify-content:center;
+    color:var(--navy);position:relative;box-shadow:var(--shadow-float);cursor:pointer;
   }
-  .avatar-icon svg{width:16px;height:16px;}
-  .avatar-icon .dot{position:absolute;top:-1px;right:-1px;width:8px;height:8px;border-radius:50%;background:#ff3b4e;border:1.5px solid #fff;}
-
-  .wallpaper-toolrow{display:flex;align-items:center;gap:8px;}
+  .avatar-icon svg{width:17px;height:17px;}
+  .avatar-icon .dot{position:absolute;top:-2px;right:-2px;width:8px;height:8px;border-radius:50%;background:#ff3b4e;border:1.5px solid #fff;}
+  .wallpaper-toolrow{display:flex;align-items:center;gap:7px;}
   .cycle-btn{
-    background:var(--pill-bg);border-radius:9px;padding:6px 11px;
-    display:flex;align-items:center;gap:6px;font-family:'Baloo 2';font-weight:700;font-size:12.5px;
-    color:var(--navy);box-shadow:var(--shadow-float);cursor:pointer;
+    background:var(--pill-bg);border-radius:9px;padding:6px 10px;display:flex;align-items:center;gap:5px;
+    font-family:'Baloo 2';font-weight:700;font-size:12.5px;color:var(--navy);box-shadow:var(--shadow-float);cursor:pointer;
   }
-  .cycle-btn svg{width:14px;height:14px;}
-  .cycle-btn:active svg{transform:rotate(90deg);}
-  .cycle-btn svg{transition:transform .3s ease;}
-  .square-btn{
-    width:30px;height:30px;border-radius:9px;background:var(--pill-bg);
-    display:flex;align-items:center;justify-content:center;color:var(--navy);
-    box-shadow:var(--shadow-float);cursor:pointer;
-  }
-  .square-btn svg{width:15px;height:15px;}
+  .cycle-btn svg{width:13px;height:13px;transition:transform .3s ease;}
+  .cycle-btn:active svg{transform:rotate(120deg);}
+  .square-btn{width:29px;height:29px;border-radius:9px;background:var(--pill-bg);display:flex;align-items:center;justify-content:center;color:var(--navy);box-shadow:var(--shadow-float);cursor:pointer;}
+  .square-btn svg{width:14px;height:14px;}
 
-  .hud-left-icons{
-    position:absolute;top:78px;left:16px;
-    display:grid;grid-template-columns:repeat(2,56px);gap:10px;
-  }
+  .hud-left-icons{position:absolute;top:64px;left:14px;display:grid;grid-template-columns:repeat(2,56px);gap:12px;}
   .side-icon{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;position:relative;}
-  .side-icon .tile{
-    width:52px;height:52px;border-radius:13px;background:var(--pill-bg);
-    display:flex;align-items:center;justify-content:center;color:var(--navy);
-    box-shadow:var(--shadow-float);position:relative;
-  }
+  .side-icon .tile{width:54px;height:54px;border-radius:14px;background:var(--pill-bg);display:flex;align-items:center;justify-content:center;color:var(--navy);box-shadow:var(--shadow-float);position:relative;}
   .side-icon .tile svg{width:24px;height:24px;}
-  .side-icon span{font-family:'Baloo 2';font-weight:700;font-size:11px;color:#eef2fb;text-shadow:0 1px 3px rgba(0,0,0,.5);}
-  .side-icon .badge{
-    position:absolute;top:-5px;right:-5px;min-width:18px;height:18px;border-radius:9px;
-    background:#ff3b4e;color:#fff;font-family:'Baloo 2';font-weight:800;font-size:10.5px;
-    display:flex;align-items:center;justify-content:center;padding:0 4px;border:2px solid #fff;
-  }
+  .side-icon span{font-family:'Baloo 2';font-weight:700;font-size:11px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.6);}
+  .side-icon .badge{position:absolute;top:-5px;right:-5px;min-width:19px;height:19px;border-radius:6px;background:#ff3b4e;color:#fff;font-family:'Baloo 2';font-weight:800;font-size:10.5px;display:flex;align-items:center;justify-content:center;padding:0 4px;border:2px solid #fff;}
+  .side-icon .badge.blue{background:var(--blue-accent);}
+  .side-icon .dotonly{position:absolute;top:2px;right:2px;width:8px;height:8px;border-radius:50%;background:#ff3b4e;border:1.5px solid #fff;}
 
   .hud-fill{flex:1;}
-
   .hud-bottom{margin-top:auto;}
-  .bottom-nav{
-    background:linear-gradient(180deg, rgba(238,242,247,0) 0%, rgba(238,242,247,0.96) 26%, #eef2f7 100%);
-    padding:30px 14px 12px;display:flex;align-items:flex-end;gap:6px;justify-content:center;
-  }
-  .nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;position:relative;min-width:50px;cursor:default;}
-  .nav-item .tile{
-    width:44px;height:44px;border-radius:11px;background:var(--panel-white);
-    display:flex;align-items:center;justify-content:center;color:var(--navy);box-shadow:var(--shadow-card);
-  }
-  .nav-item .tile svg{width:21px;height:21px;}
+  .bottom-nav{background:linear-gradient(180deg,rgba(238,242,247,0) 0%,rgba(238,242,247,.96) 30%,#eef2f7 100%);padding:32px 12px 12px;display:flex;align-items:flex-end;gap:5px;justify-content:center;}
+  .nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;position:relative;min-width:48px;}
+  .nav-item .tile{width:46px;height:46px;border-radius:12px;background:var(--panel-white);display:flex;align-items:center;justify-content:center;color:var(--navy);box-shadow:var(--shadow-card);}
+  .nav-item .tile svg{width:22px;height:22px;}
   .nav-item span{font-family:'Baloo 2';font-weight:700;font-size:10.5px;color:var(--text-mid);}
-  .nav-item .float-pill{
-    position:absolute;top:-16px;left:50%;transform:translateX(-50%);
-    background:var(--pink-badge);color:#fff;font-family:'Baloo 2';font-weight:800;font-size:9px;
-    padding:2px 7px;border-radius:999px;white-space:nowrap;box-shadow:0 2px 5px rgba(0,0,0,.2);
-  }
+  .nav-item .float-pill{position:absolute;top:-15px;left:50%;transform:translateX(-50%);background:var(--pink-badge);color:#fff;font-family:'Baloo 2';font-weight:800;font-size:9px;padding:2px 8px;border-radius:999px;white-space:nowrap;box-shadow:0 2px 5px rgba(0,0,0,.2);}
   .nav-item .float-pill.orange{background:var(--orange-tag);}
-  .nav-item .dot{position:absolute;top:0;right:6px;width:7px;height:7px;border-radius:50%;background:#4aa8ff;border:1.5px solid #fff;}
-  .nav-item.campaign{cursor:pointer;}
-  .nav-item.campaign .tile{
-    width:56px;height:56px;background:linear-gradient(160deg,#3d8bfd,var(--navy));color:#fff;border-radius:14px;
-  }
+  .nav-item .dot{position:absolute;top:0;right:5px;width:7px;height:7px;border-radius:50%;background:#4aa8ff;border:1.5px solid #fff;}
+  .nav-item.clickable{cursor:pointer;}
+  .nav-item.campaign .tile{width:58px;height:58px;border-radius:15px;background:linear-gradient(155deg,#4d94ff,var(--navy));color:#fff;transform:translateY(-8px);}
   .nav-item.campaign .tile svg{width:26px;height:26px;}
-  .nav-item.campaign span{color:var(--navy);font-size:11px;}
-  .nav-item.tasks-nav{cursor:pointer;}
+  .nav-item.campaign{transform:translateY(0);}
 
-  /* ========================================================
-     TASKS VIEW
-  ======================================================== */
+  .wallpaper-side-controls{position:absolute;top:50%;transform:translateY(-50%);z-index:5;width:42px;height:42px;border-radius:999px;background:rgba(12,18,32,0.42);display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;}
+  .wallpaper-side-controls.left{left:16px;} .wallpaper-side-controls.right{right:16px;}
+  .wallpaper-side-controls svg{width:19px;height:19px;}
+  .wallpaper-side-controls:hover{background:rgba(12,18,32,0.65);}
+
+  /* ===================== TASKS ===================== */
   #tasksView{background:var(--bg-soft);}
-  .tasks-header{
-    display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--panel-white);
-    box-shadow:0 2px 8px rgba(20,30,60,0.06);z-index:3;flex-shrink:0;
-  }
-  .back-circle{
-    width:36px;height:36px;border-radius:50%;background:var(--pill-bg);border:1px solid var(--pill-border);
-    display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--navy);flex-shrink:0;
-  }
+  .tasks-header{display:flex;align-items:center;gap:14px;padding:11px 18px;background:var(--panel-white);box-shadow:0 2px 8px rgba(20,30,60,0.06);z-index:3;flex-shrink:0;}
+  .back-circle{width:38px;height:38px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;flex-shrink:0;}
   .back-circle svg{width:17px;height:17px;}
-  .tasks-header h1{font-family:'Baloo 2';font-size:21px;margin:0;color:var(--text-dark);font-weight:800;flex-shrink:0;}
+  .tasks-header h1{font-family:'Baloo 2';font-size:23px;margin:0;color:var(--text-dark);font-weight:800;flex-shrink:0;}
   .tasks-header .spacer{flex:1;}
-  .tasks-header .stat-row{gap:8px;}
-  .tasks-header .stat-pill{background:var(--pill-bg);border:1px solid var(--pill-border);box-shadow:none;font-size:12.5px;padding:5px 10px;}
-  .tasks-header .icon-btn{
-    width:34px;height:34px;border-radius:50%;background:var(--pill-bg);border:1px solid var(--pill-border);
-    display:flex;align-items:center;justify-content:center;color:var(--navy);cursor:pointer;flex-shrink:0;
-  }
-  .tasks-header .icon-btn svg{width:16px;height:16px;}
+  .plain-stat-row{display:flex;align-items:center;gap:12px;}
+  .plain-stat{display:flex;align-items:center;gap:6px;font-family:'Baloo 2';font-weight:700;font-size:15px;color:var(--text-dark);}
+  .plain-stat .ico{width:16px;height:16px;}
+  .plain-stat.ap .ico{color:var(--green-ap);} .plain-stat.gold .ico{color:var(--gold-text);} .plain-stat.gem .ico{color:var(--gem-blue);}
+  .stat-divider{width:1px;height:20px;background:var(--pill-border);}
+  .plain-icon-btn{width:22px;height:22px;display:flex;align-items:center;justify-content:center;color:var(--navy);cursor:pointer;}
+  .plain-icon-btn svg{width:19px;height:19px;}
 
-  .tasks-body{flex:1;display:flex;overflow:hidden;}
-  .character-panel{
-    width:270px;flex-shrink:0;background:linear-gradient(180deg,#dbeafe 0%,#eef2f7 75%);
-    display:flex;flex-direction:column;position:relative;border-right:1px solid #e2e6ee;overflow:hidden;
-  }
-  .char-img-wrap{
-    flex:1;position:relative;overflow:hidden;cursor:pointer;min-height:0;
-  }
-  .char-img-wrap img.char-img{
-    width:100%;height:100%;object-fit:cover;display:block;
-  }
-  .char-img-wrap .bottom-fade{
-    position:absolute;left:0;right:0;bottom:0;height:40%;
-    background:linear-gradient(180deg, rgba(238,242,247,0), #eef2f7 92%);
-    pointer-events:none;
-  }
-  .char-empty{
-    position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
-    color:#7d8bab;text-align:center;font-family:'Baloo 2';font-size:13.5px;gap:8px;
-  }
-  .char-empty svg{width:38px;height:38px;opacity:.5;}
-  .char-bottom-area{padding:0 14px 16px;position:relative;z-index:2;}
-  .speech-bubble{
-    background:#fff;border-radius:15px;padding:11px 13px;box-shadow:var(--shadow-card);
-    font-size:13px;line-height:1.4;color:var(--text-dark);position:relative;margin-bottom:10px;min-height:18px;
-  }
-  .speech-bubble:after{
-    content:"";position:absolute;bottom:-7px;left:22px;
-    border-width:7px 7px 0 7px;border-style:solid;border-color:#fff transparent transparent transparent;
-  }
-  .char-manage-btn{
-    font-family:'Baloo 2';font-weight:700;font-size:12px;background:var(--panel-white);
-    border:1px solid var(--pill-border);border-radius:999px;padding:7px 14px;cursor:pointer;
-    color:var(--navy);box-shadow:var(--shadow-card);width:100%;
-  }
+  .tasks-body{flex:1;display:flex;overflow:hidden;position:relative;}
+  .character-panel{width:270px;flex-shrink:0;position:relative;overflow:hidden;display:flex;flex-direction:column;}
+  .character-panel .panel-bg{position:absolute;inset:0;background:linear-gradient(180deg,#dbeafe,#eef2f7);}
+  .character-panel .panel-bg img{width:100%;height:100%;object-fit:cover;filter:blur(3px) brightness(.92);}
+  .character-panel .panel-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(238,242,247,.15),#eef2f7 88%);}
+  .char-img-wrap{flex:1;position:relative;overflow:hidden;cursor:pointer;min-height:0;z-index:1;}
+  .char-img-wrap img.char-img{width:100%;height:100%;object-fit:cover;display:block;}
+  .char-empty{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#7d8bab;text-align:center;font-family:'Baloo 2';font-size:13px;gap:8px;}
+  .char-empty svg{width:36px;height:36px;opacity:.5;}
+  .char-bottom-area{padding:0 14px 14px;position:relative;z-index:2;}
+  .char-roster-row{display:flex;gap:6px;margin-bottom:8px;overflow-x:auto;}
+  .char-roster-thumb{width:34px;height:34px;border-radius:9px;overflow:hidden;flex-shrink:0;border:2px solid transparent;cursor:pointer;}
+  .char-roster-thumb.active{border-color:var(--blue-accent);}
+  .char-roster-thumb img{width:100%;height:100%;object-fit:cover;}
+  .speech-bubble{background:#fff;border-radius:16px;padding:12px 14px;box-shadow:var(--shadow-card);font-size:13px;line-height:1.4;color:var(--text-dark);position:relative;margin-bottom:10px;min-height:18px;}
+  .speech-bubble:after{content:"";position:absolute;bottom:-7px;left:18px;border-width:7px 8px 0 0;border-style:solid;border-color:#fff transparent transparent transparent;}
+  .char-manage-btn{font-family:'Baloo 2';font-weight:700;font-size:12px;background:var(--panel-white);border:1px solid var(--pill-border);border-radius:999px;padding:7px 14px;cursor:pointer;color:var(--navy);box-shadow:var(--shadow-card);width:100%;}
 
   .tasks-panel{flex:1;display:flex;flex-direction:column;overflow:hidden;padding:14px 18px 0;position:relative;}
-  .category-tabs{display:flex;gap:7px;overflow-x:auto;padding-bottom:12px;flex-shrink:0;}
-  .cat-tab{
-    font-family:'Baloo 2';font-weight:700;font-size:13.5px;padding:8px 15px;border-radius:11px;cursor:pointer;
-    white-space:nowrap;background:var(--panel-white);color:var(--text-mid);border:1px solid var(--pill-border);
-    position:relative;flex-shrink:0;
-  }
-  .cat-tab.active{background:var(--navy);color:#fff;border-color:var(--navy);}
-  .cat-tab .dot{position:absolute;top:-3px;right:-3px;width:8px;height:8px;border-radius:50%;background:var(--orange-tag);border:1.5px solid #fff;}
-  .cat-tab.add-tab{color:var(--blue-accent-dark);border-style:dashed;}
+  .category-tabs{display:flex;overflow-x:auto;flex-shrink:0;border-radius:12px;overflow:hidden;box-shadow:var(--shadow-card);margin-bottom:12px;background:#fff;}
+  .cat-tab{font-family:'Baloo 2';font-weight:700;font-size:14px;padding:12px 18px;cursor:pointer;white-space:nowrap;background:#fff;color:var(--text-mid);position:relative;flex-shrink:0;}
+  .cat-tab.active{background:var(--navy);color:#fff;}
+  .cat-tab .dot{position:absolute;top:8px;right:6px;width:7px;height:7px;border-radius:50%;background:#ff5b3d;}
+  .cat-tab.add-tab{color:var(--blue-accent-dark);}
 
   .task-list{flex:1;overflow-y:auto;padding-bottom:96px;display:flex;flex-direction:column;gap:9px;}
-  .task-card{
-    background:var(--panel-white);border-radius:var(--radius-md);box-shadow:var(--shadow-card);
-    padding:12px 14px;display:flex;align-items:center;gap:14px;position:relative;
-  }
+  .task-card{background:var(--panel-white);border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:13px 15px;display:flex;align-items:center;gap:14px;position:relative;}
   .task-card.claimed{opacity:0.5;}
   .task-card-left{flex:1;min-width:0;}
-  .task-top-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;}
-  .task-tag{font-family:'Baloo 2';font-weight:700;font-size:11px;padding:3px 9px;border-radius:7px;flex-shrink:0;}
+  .task-top-row{display:flex;align-items:center;gap:9px;margin-bottom:8px;flex-wrap:wrap;}
+  .task-tag{font-family:'Baloo 2';font-weight:700;font-size:11px;padding:3px 10px;border-radius:6px;flex-shrink:0;}
   .task-tag.tag-daily{background:var(--daily-tag-bg);color:var(--daily-tag);}
   .task-tag.tag-weekly{background:var(--weekly-tag-bg);color:var(--weekly-tag);}
   .task-tag.tag-achievement{background:var(--orange-tag-bg);color:var(--orange-tag);}
+  .task-tag.tag-monthly{background:#e0f7ea;color:#2bb36a;}
   .task-tag.tag-custom{background:var(--custom-tag-bg);color:var(--custom-tag);}
-  .task-title{font-family:'Baloo 2';font-weight:700;font-size:14.5px;color:var(--text-dark);}
-  .task-count-row{display:flex;align-items:baseline;gap:6px;margin-bottom:5px;}
-  .count-label{font-family:'Baloo 2';font-weight:700;font-size:11.5px;color:var(--text-soft);}
-  .count-value{font-family:'Baloo 2';font-weight:800;font-size:13px;color:var(--text-dark);}
-  .progress-track{height:8px;border-radius:99px;background:#e5e9f1;overflow:hidden;}
-  .progress-track.small{height:6px;}
+  .task-repeat-badge{display:inline-flex;align-items:center;gap:3px;font-family:'Baloo 2';font-weight:700;font-size:10.5px;color:var(--text-soft);}
+  .task-repeat-badge svg{width:11px;height:11px;}
+  .task-edit{position:absolute;top:8px;right:32px;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text-soft);cursor:pointer;opacity:.3;}
+  .task-edit:hover{opacity:1;background:#e4f0ff;color:var(--blue-accent-dark);}
+  .task-edit svg{width:11px;height:11px;}
+  .subtask-toggle{display:flex;align-items:center;gap:3px;font-family:'Baloo 2';font-weight:700;font-size:11px;color:var(--blue-accent-dark);cursor:pointer;margin-bottom:6px;}
+  .subtask-toggle svg{width:11px;height:11px;transition:transform .2s ease;}
+  .subtask-toggle.open svg{transform:rotate(90deg);}
+  .subtask-list{display:none;flex-direction:column;gap:5px;margin:4px 0 8px;padding-left:2px;}
+  .subtask-list.open{display:flex;}
+  .subtask-row{display:flex;align-items:center;gap:8px;}
+  .subtask-row input[type=checkbox]{width:16px;height:16px;accent-color:var(--blue-accent);flex-shrink:0;}
+  .subtask-row span{font-size:13px;color:var(--text-dark);}
+  .subtask-row.done span{text-decoration:line-through;color:var(--text-soft);}
+  .subtask-editor-list{display:flex;flex-direction:column;gap:6px;margin-bottom:10px;max-height:140px;overflow-y:auto;}
+  .subtask-editor-row{display:flex;align-items:center;gap:8px;background:#f3f5f8;border-radius:10px;padding:7px 10px;}
+  .subtask-editor-row span{flex:1;font-size:13px;}
+  .subtask-editor-row .rm{cursor:pointer;color:var(--text-soft);flex-shrink:0;}
+  .subtask-editor-row .rm svg{width:13px;height:13px;}
+  .task-title{font-family:'Baloo 2';font-weight:700;font-size:15px;color:var(--text-dark);}
+  .task-count-row{display:flex;align-items:baseline;gap:7px;margin-bottom:6px;}
+  .count-label{font-family:'Baloo 2';font-weight:700;font-size:12px;color:var(--text-soft);}
+  .count-value{font-family:'Baloo 2';font-weight:800;font-size:14px;color:var(--text-dark);}
+  .progress-track{height:11px;border-radius:99px;background:#e5e9f1;overflow:hidden;}
+  .progress-track.small{height:7px;}
   .progress-fill{height:100%;background:linear-gradient(90deg,#5aa3ff,#3d8bfd);border-radius:99px;transition:width .25s ease;}
-  .task-card-right{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:6px;}
-  .reward-chip{
-    display:flex;align-items:center;gap:4px;font-family:'Baloo 2';font-weight:800;font-size:12px;color:var(--gold-text);
-  }
-  .reward-chip svg{width:13px;height:13px;}
-  .task-action-btn{
-    font-family:'Baloo 2';font-weight:800;font-size:12.5px;border:none;border-radius:9px;
-    padding:8px 15px;cursor:pointer;white-space:nowrap;
-  }
+  .task-card-right{flex-shrink:0;display:flex;align-items:center;gap:10px;}
+  .reward-chip-box{display:flex;flex-direction:column;align-items:center;gap:1px;background:#eef2f7;border-radius:9px;padding:5px 8px;}
+  .reward-chip-box svg{width:16px;height:16px;color:var(--gem-blue);}
+  .reward-chip-box span{font-family:'Baloo 2';font-weight:800;font-size:10.5px;color:var(--text-mid);}
+  .task-action-btn{font-family:'Baloo 2';font-weight:800;font-size:13px;border:none;border-radius:10px;padding:11px 18px;cursor:pointer;white-space:nowrap;}
   .task-action-btn.progress{background:var(--blue-accent);color:#fff;}
   .task-action-btn.claim{background:linear-gradient(180deg,#ffe27a,var(--yellow-dark));color:#6b4200;}
   .task-action-btn.claimed{background:#e5e9f1;color:var(--text-soft);cursor:default;}
-  .task-del{
-    position:absolute;top:8px;right:8px;width:20px;height:20px;border-radius:50%;
-    display:flex;align-items:center;justify-content:center;color:var(--text-soft);cursor:pointer;
-    opacity:.35;
-  }
+  .task-del{position:absolute;top:8px;right:8px;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text-soft);cursor:pointer;opacity:.3;}
   .task-del:hover{opacity:1;background:#fbe3e6;color:#e0455a;}
   .task-del svg{width:11px;height:11px;}
 
@@ -291,49 +212,67 @@
   .empty-state svg{width:40px;height:40px;opacity:.4;}
   .empty-state b{font-family:'Baloo 2';color:var(--text-mid);font-size:14.5px;}
 
-  .claim-all-bar{
-    position:absolute;left:18px;right:18px;bottom:14px;background:var(--panel-white);
-    border-radius:var(--radius-md);box-shadow:var(--shadow-pop);padding:12px 14px;
-    display:flex;align-items:center;gap:14px;z-index:6;
-  }
+  .footer-row{position:absolute;left:18px;right:18px;bottom:14px;display:flex;gap:10px;z-index:6;}
+  .claim-all-card{flex:1;background:var(--panel-white);border-radius:var(--radius-md);box-shadow:var(--shadow-pop);padding:12px 16px;display:flex;align-items:center;gap:14px;min-width:0;}
   .claim-all-left{flex:1;min-width:0;}
-  .claim-all-title{font-family:'Baloo 2';font-weight:700;font-size:12.5px;color:var(--text-dark);margin-bottom:4px;}
-  .claim-all-count{font-family:'Baloo 2';font-weight:700;font-size:11px;color:var(--text-soft);margin-bottom:5px;}
-  .claim-all-btn{
-    font-family:'Baloo 2';font-weight:800;font-size:13px;border:none;border-radius:10px;padding:10px 18px;cursor:pointer;
-    background:linear-gradient(180deg,#ffe27a,var(--yellow-dark));color:#6b4200;flex-shrink:0;
+  .claim-all-title{font-family:'Baloo 2';font-weight:800;font-size:13px;color:var(--text-dark);margin-bottom:5px;}
+  .claim-all-count{font-family:'Baloo 2';font-weight:700;font-size:11.5px;color:var(--text-soft);float:right;}
+  .claim-all-btn-detached{
+    font-family:'Baloo 2';font-weight:800;font-size:15px;border:none;border-radius:var(--radius-md);padding:0 22px;cursor:pointer;
+    background:linear-gradient(180deg,#ffe27a,var(--yellow-dark));color:#6b4200;box-shadow:var(--shadow-pop);flex-shrink:0;
   }
-  .claim-all-btn:disabled{background:#e5e9f1;color:var(--text-soft);cursor:default;}
-  .add-task-fab{
-    position:absolute;bottom:78px;right:18px;width:46px;height:46px;border-radius:50%;
-    background:linear-gradient(160deg,#4fa0ff,var(--blue-accent-dark));color:#fff;border:none;
-    display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 8px 18px rgba(61,139,253,.45);z-index:6;
-  }
+  .claim-all-btn-detached:disabled{background:#d9dee7;color:#a5adbd;}
+  .add-task-fab{position:absolute;bottom:78px;right:18px;width:46px;height:46px;border-radius:50%;background:linear-gradient(160deg,#4fa0ff,var(--blue-accent-dark));color:#fff;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 8px 18px rgba(61,139,253,.45);z-index:6;}
   .add-task-fab svg{width:20px;height:20px;}
 
-  /* ========================================================
-     MODALS
-  ======================================================== */
+  /* ===================== GACHA (Recruit) ===================== */
+  #gachaView{background:var(--bg-soft);}
+  .gacha-hero{flex:1;overflow-y:auto;padding:18px;}
+  .rarity-rates-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+  .rarity-chip{display:flex;align-items:center;gap:6px;background:#fff;border-radius:999px;padding:6px 12px;box-shadow:var(--shadow-card);font-family:'Baloo 2';font-weight:700;font-size:12.5px;}
+  .rarity-swatch{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+  .pull-panel{background:#fff;border-radius:var(--radius-lg);box-shadow:var(--shadow-card);padding:22px;text-align:center;margin-bottom:16px;}
+  .pull-panel h2{font-family:'Baloo 2';font-size:20px;margin:0 0 6px;color:var(--text-dark);}
+  .pull-panel p{color:var(--text-mid);font-size:13.5px;margin:0 0 16px;}
+  .pull-btn-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+  .pull-btn{font-family:'Baloo 2';font-weight:800;font-size:15px;border:none;border-radius:14px;padding:14px 26px;cursor:pointer;background:linear-gradient(155deg,#4d94ff,var(--navy));color:#fff;box-shadow:var(--shadow-card);display:flex;flex-direction:column;align-items:center;gap:2px;}
+  .pull-btn small{font-weight:700;font-size:11.5px;opacity:.85;}
+  .pull-btn.x10{background:linear-gradient(155deg,#ffb44d,#c9962c);}
+  .manage-pool-btn{font-family:'Baloo 2';font-weight:700;font-size:13px;background:#fff;border:1px solid var(--pill-border);border-radius:999px;padding:9px 18px;cursor:pointer;color:var(--navy);box-shadow:var(--shadow-card);margin:0 auto 16px;display:block;}
+  .collection-summary{display:flex;gap:10px;flex-wrap:wrap;}
+  .collection-stat{flex:1;min-width:120px;background:#fff;border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:14px;text-align:center;}
+  .collection-stat .num{font-family:'Baloo 2';font-weight:800;font-size:22px;color:var(--text-dark);}
+  .collection-stat .lbl{font-family:'Baloo 2';font-weight:700;font-size:11.5px;color:var(--text-soft);}
+
+  .pull-result-overlay{position:absolute;inset:0;background:rgba(12,18,32,0.6);display:none;align-items:center;justify-content:center;z-index:60;padding:20px;}
+  .pull-result-overlay.active{display:flex;}
+  .pull-result-card{background:#fff;border-radius:var(--radius-lg);padding:24px;text-align:center;max-width:320px;box-shadow:var(--shadow-pop);}
+  .pull-result-thumb{width:120px;height:120px;border-radius:16px;overflow:hidden;margin:0 auto 14px;background:#eef2f7;display:flex;align-items:center;justify-content:center;}
+  .pull-result-thumb img{width:100%;height:100%;object-fit:cover;}
+  .pull-result-thumb svg{width:48px;height:48px;color:var(--blue-accent);}
+  .pull-result-rarity{font-family:'Baloo 2';font-weight:800;font-size:13px;margin-bottom:4px;}
+  .pull-result-name{font-family:'Baloo 2';font-weight:700;font-size:17px;color:var(--text-dark);margin-bottom:14px;}
+
+  /* ===================== MODALS (shared) ===================== */
   .modal-overlay{position:absolute;inset:0;background:rgba(12,18,32,0.5);display:none;align-items:center;justify-content:center;z-index:50;padding:20px;}
   .modal-overlay.active{display:flex;}
-  .modal-box{background:#fff;border-radius:var(--radius-lg);padding:22px;width:100%;max-width:420px;max-height:88vh;overflow-y:auto;box-shadow:var(--shadow-pop);}
+  .modal-box{background:#fff;border-radius:var(--radius-lg);padding:22px;width:100%;max-width:460px;max-height:88vh;overflow-y:auto;box-shadow:var(--shadow-pop);}
+  .modal-box.wide{max-width:600px;}
   .modal-box h2{font-family:'Baloo 2';font-size:19px;margin:0 0 16px;color:var(--text-dark);font-weight:800;}
+  .modal-box h3{font-family:'Baloo 2';font-size:14px;margin:18px 0 10px;color:var(--text-dark);font-weight:800;}
   .field{margin-bottom:14px;}
   .field label{font-family:'Baloo 2';font-weight:700;font-size:12.5px;color:var(--text-mid);display:block;margin-bottom:6px;}
-  .field input[type=text], .field input[type=number], .field select{
-    width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--pill-border);
-    font-family:'Nunito';font-size:14px;background:#f3f5f8;color:var(--text-dark);
-  }
-  .field-row{display:flex;gap:10px;}
-  .field-row .field{flex:1;}
+  .field input[type=text],.field input[type=number],.field select{width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--pill-border);font-size:14px;background:#f3f5f8;color:var(--text-dark);}
+  .field-row{display:flex;gap:10px;} .field-row .field{flex:1;}
   .modal-actions{display:flex;gap:10px;margin-top:6px;}
   .btn{font-family:'Baloo 2';font-weight:800;font-size:14px;border:none;border-radius:12px;padding:11px 16px;cursor:pointer;flex:1;text-align:center;}
   .btn.primary{background:linear-gradient(180deg,#4fa0ff,var(--blue-accent-dark));color:#fff;}
   .btn.secondary{background:#f3f5f8;color:var(--text-mid);border:1.5px solid var(--pill-border);}
+  .btn.small{flex:0 0 auto;padding:9px 14px;font-size:12.5px;}
 
   .thumb-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
   .thumb{width:60px;height:60px;border-radius:10px;overflow:hidden;position:relative;border:1.5px solid var(--pill-border);flex-shrink:0;}
-  .thumb img, .thumb video{width:100%;height:100%;object-fit:cover;}
+  .thumb img,.thumb video{width:100%;height:100%;object-fit:cover;}
   .thumb .rm{position:absolute;top:2px;right:2px;width:17px;height:17px;border-radius:50%;background:rgba(0,0,0,0.55);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;}
   .thumb .rm svg{width:9px;height:9px;}
   .upload-tile{width:60px;height:60px;border-radius:10px;border:1.5px dashed var(--pill-border);display:flex;align-items:center;justify-content:center;color:var(--text-soft);cursor:pointer;flex-shrink:0;}
@@ -346,18 +285,43 @@
   .slider-row label{font-family:'Baloo 2';font-weight:700;font-size:12px;color:var(--text-mid);width:82px;flex-shrink:0;}
   .slider-row input[type=range]{flex:1;accent-color:var(--blue-accent);}
 
-  .dialogue-list{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;max-height:170px;overflow-y:auto;}
+  .dialogue-list{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;max-height:150px;overflow-y:auto;}
   .dialogue-row{display:flex;align-items:center;gap:8px;background:#f3f5f8;border-radius:10px;padding:8px 10px;}
   .dialogue-row span{flex:1;font-size:13px;color:var(--text-dark);}
   .dialogue-row .rm{cursor:pointer;color:var(--text-soft);flex-shrink:0;}
   .dialogue-row .rm svg{width:14px;height:14px;}
 
-  .toast{
-    position:absolute;bottom:24px;left:50%;transform:translateX(-50%) translateY(0);
-    background:var(--navy);color:#fff;font-family:'Baloo 2';font-weight:700;font-size:13px;
-    padding:10px 18px;border-radius:999px;box-shadow:var(--shadow-pop);z-index:80;
-    opacity:0;pointer-events:none;transition:opacity .2s ease, transform .2s ease;display:flex;align-items:center;gap:8px;
-  }
+  .rarity-row{display:flex;align-items:center;gap:8px;background:#f3f5f8;border-radius:10px;padding:8px 10px;margin-bottom:6px;}
+  .rarity-row .rarity-swatch{width:14px;height:14px;}
+  .rarity-row span.name{flex:1;font-family:'Baloo 2';font-weight:700;font-size:13px;}
+  .rarity-row input[type=number]{width:64px;padding:6px 8px;border-radius:8px;border:1.5px solid var(--pill-border);font-size:13px;}
+  .rarity-row .rm{cursor:pointer;color:var(--text-soft);flex-shrink:0;}
+  .rarity-row .rm svg{width:14px;height:14px;}
+  .rarity-total-note{font-size:12px;color:var(--text-soft);margin:6px 0 14px;}
+  .rarity-total-note.warn{color:#e0455a;}
+
+  .pending-file-row{display:flex;align-items:center;gap:8px;background:#f3f5f8;border-radius:10px;padding:8px 10px;margin-bottom:6px;}
+  .pending-file-row .thumb{width:40px;height:40px;margin:0;}
+  .pending-file-row .fname{flex:1;font-size:12px;color:var(--text-dark);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .pending-file-row select{padding:6px 8px;border-radius:8px;border:1.5px solid var(--pill-border);font-size:12px;}
+  .quickset-row{display:flex;gap:8px;align-items:center;background:#e4f0ff;border-radius:10px;padding:10px;margin-bottom:10px;}
+  .quickset-row select{flex:1;padding:8px;border-radius:8px;border:1.5px solid var(--pill-border);font-size:12.5px;}
+
+  .pool-list{display:flex;flex-direction:column;gap:6px;max-height:220px;overflow-y:auto;margin-bottom:10px;}
+  .pool-row{display:flex;align-items:center;gap:8px;background:#f3f5f8;border-radius:10px;padding:7px 10px;}
+  .pool-row .thumb{width:36px;height:36px;margin:0;}
+  .pool-row .pname{flex:1;font-size:12.5px;color:var(--text-dark);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .pool-row .ptag{font-family:'Baloo 2';font-weight:700;font-size:10px;padding:2px 7px;border-radius:6px;flex-shrink:0;}
+  .pool-row .lockstate{font-size:14px;flex-shrink:0;}
+  .pool-row .rm{cursor:pointer;color:var(--text-soft);flex-shrink:0;}
+  .pool-row .rm svg{width:13px;height:13px;}
+
+  .treat-row{display:flex;align-items:center;gap:10px;background:#f3f5f8;border-radius:10px;padding:10px;margin-bottom:8px;}
+  .treat-row .play-btn{width:32px;height:32px;border-radius:50%;background:var(--blue-accent);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
+  .treat-row .play-btn svg{width:14px;height:14px;}
+  .treat-row span{font-family:'Baloo 2';font-weight:700;font-size:13px;color:var(--text-dark);}
+
+  .toast{position:absolute;bottom:24px;left:50%;transform:translateX(-50%) translateY(0);background:var(--navy);color:#fff;font-family:'Baloo 2';font-weight:700;font-size:13px;padding:10px 18px;border-radius:999px;box-shadow:var(--shadow-pop);z-index:90;opacity:0;pointer-events:none;transition:opacity .2s ease, transform .2s ease;display:flex;align-items:center;gap:8px;}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(-4px);}
   .toast svg{width:15px;height:15px;color:var(--yellow);}
 
@@ -368,79 +332,58 @@
 <body>
 <div class="app-shell" id="appShell">
 
-  <!-- ===== HOME VIEW ===== -->
+  <!-- ===== HOME ===== -->
   <div class="view active" id="homeView">
     <div class="wallpaper-layer" id="wallpaperLayer">
       <div class="wallpaper-empty" id="wallpaperEmpty">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="M21 16l-5-5-9 9"/></svg>
-        <b>No wallpapers yet</b>
-        <small>Use the expand icon top-right to add some</small>
+        <b>No wallpapers yet</b><small>Tap the expand icon top-right to add some</small>
       </div>
     </div>
+    <div class="wallpaper-side-controls left" id="wpPrevBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 6l-6 6 6 6"/></svg></div>
+    <div class="wallpaper-side-controls right" id="wpNextBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 6l6 6-6 6"/></svg></div>
 
     <div class="hud">
-      <div class="hud-top">
-        <div class="level-box">
-          <div class="level-top">
-            <div class="level-left"><span class="lv-label">Lv.</span><span class="lv-value">90</span></div>
-            <div class="level-right"><span class="level-name">Genki</span><span class="level-max">MAX</span></div>
-          </div>
-          <div class="level-progress-track"><div class="level-progress-fill" style="width:100%;"></div></div>
+      <div class="level-box">
+        <div class="level-top">
+          <div class="level-left"><span class="lv-label">Lv.</span><span class="lv-value">90</span></div>
+          <div class="level-right"><span class="level-name">Genki</span><span class="level-max">MAX</span></div>
         </div>
+        <div class="level-progress-track"><div class="level-progress-fill" style="width:100%;"></div></div>
+      </div>
 
-        <div class="hud-top-right">
-          <div class="stat-row">
-            <div class="stat-pill-group">
-              <div class="stat-pill ap"><svg class="ico" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h7l-1 8 10-12h-7z"/></svg><span>240/240</span></div>
-              <div class="plus-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 5v14M5 12h14"/></svg></div>
-            </div>
-            <div class="stat-pill-group">
-              <div class="stat-pill gold"><svg class="ico" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="9"/></svg><span>43,742,948</span></div>
-              <div class="plus-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 5v14M5 12h14"/></svg></div>
-            </div>
-            <div class="stat-pill-group">
-              <div class="stat-pill gem"><svg class="ico" viewBox="0 0 24 24" fill="currentColor"><path d="M6 3h12l4 6-10 12L2 9z"/></svg><span id="currencyDisplay">0</span></div>
-              <div class="plus-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 5v14M5 12h14"/></svg></div>
-            </div>
-            <div class="avatar-icons">
-              <div class="avatar-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0116 0v1"/></svg><div class="dot"></div></div>
-              <div class="avatar-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><div class="dot"></div></div>
-              <div class="avatar-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="6" height="6"/><rect x="14" y="4" width="6" height="6"/><rect x="4" y="14" width="6" height="6"/><rect x="14" y="14" width="6" height="6"/></svg></div>
-            </div>
+      <div class="hud-topright">
+        <div class="stat-row">
+          <div class="stat-group">
+            <div class="stat-pill ap"><svg class="ico" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h7l-1 8 10-12h-7z"/></svg><span>240/240</span></div>
+            <div class="plus-square"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 5v14M5 12h14"/></svg></div>
           </div>
-          <div class="wallpaper-toolrow">
-            <div class="cycle-btn" id="wpCycleBtn" title="Next wallpaper">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 12a9 9 0 11-3-6.7"/><path d="M21 3v6h-6"/></svg>
-              <span id="wpCycleLabel">0/0</span>
-            </div>
-            <div class="square-btn" id="wpExpandBtn" title="Manage wallpapers">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 3H3v6M15 3h6v6M21 15v6h-6M3 15v6h6"/></svg>
-            </div>
+          <div class="stat-group">
+            <div class="stat-pill gold"><svg class="ico" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="9"/></svg><span>43,742,948</span></div>
+            <div class="plus-square"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 5v14M5 12h14"/></svg></div>
           </div>
+          <div class="stat-group">
+            <div class="stat-pill gem"><svg class="ico" viewBox="0 0 24 24" fill="currentColor"><path d="M6 3h12l4 6-10 12L2 9z"/></svg><span id="currencyDisplay">0</span></div>
+            <div class="plus-square"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 5v14M5 12h14"/></svg></div>
+          </div>
+          <div class="avatar-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0116 0v1"/></svg><div class="dot"></div></div>
+          <div class="avatar-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><div class="dot"></div></div>
+          <div class="avatar-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="6" height="6"/><rect x="14" y="4" width="6" height="6"/><rect x="4" y="14" width="6" height="6"/><rect x="14" y="14" width="6" height="6"/></svg></div>
+        </div>
+        <div class="wallpaper-toolrow">
+          <div class="cycle-btn" id="wpCycleBtn" title="Next wallpaper"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 12a9 9 0 11-3-6.7"/><path d="M21 3v6h-6"/></svg><span id="wpCycleLabel">0/0</span></div>
+          <div class="square-btn" id="wpExpandBtn" title="Manage wallpapers"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 3H3v6M15 3h6v6M21 15v6h-6M3 15v6h6"/></svg></div>
         </div>
       </div>
 
       <div class="hud-left-icons">
-        <div class="side-icon" id="noticeIcon">
-          <div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l18-5v12L3 14z"/><path d="M8 14v4a2 2 0 002 2h1"/></svg></div>
-          <span>Notice</span>
-        </div>
-        <div class="side-icon" id="momoIcon">
-          <div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.5 8.5 0 01-12.9 7.3L3 20l1.3-5A8.5 8.5 0 1121 11.5z"/></svg><div class="badge">142</div></div>
-          <span>MomoTalk</span>
-        </div>
-        <div class="side-icon tasks-nav" id="taskIcon">
-          <div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/></svg><div class="badge" id="taskSideBadge" style="display:none;">0</div></div>
-          <span>Tasks</span>
-        </div>
-        <div class="side-icon" id="pyroxeneIcon">
-          <div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h12l4 6-10 12L2 9z"/></svg></div>
-          <span>Buy Pyroxene</span>
-        </div>
+        <div class="side-icon"><div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l18-5v12L3 14z"/><path d="M8 14v4a2 2 0 002 2h1"/></svg></div><span>Notice</span></div>
+        <div class="side-icon" id="treatsIcon"><div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.5 8.5 0 01-12.9 7.3L3 20l1.3-5A8.5 8.5 0 1121 11.5z"/></svg><div class="badge" id="treatsBadge" style="display:none;">0</div></div><span>MomoTalk</span></div>
+        <div class="side-icon" id="taskIcon"><div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/></svg><div class="badge blue" id="taskSideBadge" style="display:none;">0</div></div><span>Tasks</span></div>
+        <div class="side-icon" id="pyroxeneIcon"><div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h12l4 6-10 12L2 9z"/></svg><div class="dotonly"></div></div><span>Buy Pyroxene</span></div>
       </div>
 
       <div class="hud-fill"></div>
-
       <div class="hud-bottom">
         <div class="bottom-nav">
           <div class="nav-item"><div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9h14v6a4 4 0 01-4 4H7a4 4 0 01-4-4V9z"/><path d="M17 10h2a2 2 0 010 4h-2"/><path d="M6 2v3M10 2v3"/></svg></div><span>Cafe</span></div>
@@ -448,39 +391,41 @@
           <div class="nav-item"><div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="7" r="3"/><circle cx="17" cy="8" r="2.5"/><path d="M2 21v-1a6 6 0 0110-4.5"/><path d="M14 21v-1a5 5 0 018 0v1"/></svg></div><span>Students</span></div>
           <div class="nav-item"><div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="10" width="7" height="10"/><rect x="14" y="6" width="7" height="14"/></svg></div><span>Formation</span></div>
           <div class="nav-item"><div class="dot"></div><div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.5 8.5 0 01-12.9 7.3L3 20l1.3-5A8.5 8.5 0 1121 11.5z"/></svg></div><span>Social</span></div>
-          <div class="nav-item"><div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.7 6.3a1 1 0 010 1.4l-7 7a1 1 0 01-1.4 0l-2-2a1 1 0 010-1.4l7-7a1 1 0 011.4 0z"/><path d="M17 2l1 4-4-1z"/><path d="M3 21l3-1 8-8-2-2-8 8z"/></svg></div><span>Crafting</span></div>
+          <div class="nav-item"><div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.7 6.3a1 1 0 010 1.4l-7 7a1 1 0 01-1.4 0l-2-2a1 1 0 010-1.4l7-7a1 1 0 011.4 0z"/><path d="M3 21l3-1 8-8-2-2-8 8z"/></svg></div><span>Crafting</span></div>
           <div class="nav-item"><div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l1-5h16l1 5"/><path d="M4 9h16v9a2 2 0 01-2 2H6a2 2 0 01-2-2z"/><path d="M9 13a3 3 0 006 0"/></svg></div><span>Shop</span></div>
-          <div class="nav-item"><div class="float-pill orange">Unique!</div><div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8l9-5 9 5-9 5-9-5z"/><path d="M3 8v8l9 5 9-5V8"/></svg></div><span>Recruit</span></div>
-          <div class="nav-item campaign" id="campaignNav"><div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg></div><span>Campaign</span></div>
+          <div class="nav-item clickable" id="recruitNav"><div class="float-pill orange">Unique!</div><div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8l9-5 9 5-9 5-9-5z"/><path d="M3 8v8l9 5 9-5V8"/></svg></div><span>Recruit</span></div>
+          <div class="nav-item campaign"><div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg></div><span>Campaign</span></div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ===== TASKS VIEW ===== -->
+  <!-- ===== TASKS ===== -->
   <div class="view" id="tasksView">
     <div class="tasks-header">
-      <div class="back-circle" id="backToHome"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 6l-6 6 6 6"/></svg></div>
+      <div class="back-circle" id="backToHome1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 6l-6 6 6 6"/></svg></div>
       <h1>Tasks</h1>
       <div class="spacer"></div>
-      <div class="stat-row">
-        <div class="stat-pill ap"><svg class="ico" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h7l-1 8 10-12h-7z"/></svg><span>240/240</span></div>
-        <div class="stat-pill gold"><svg class="ico" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="9"/></svg><span>43,742,948</span></div>
-        <div class="stat-pill gem"><svg class="ico" viewBox="0 0 24 24" fill="currentColor"><path d="M6 3h12l4 6-10 12L2 9z"/></svg><span id="currencyDisplay2">0</span></div>
-        <div class="icon-btn" id="charGearBtn" title="Manage character"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.65 1.65 0 004.6 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></div>
-        <div class="icon-btn" id="homeIconBtn" title="Home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg></div>
+      <div class="plain-stat-row">
+        <div class="plain-stat ap"><svg class="ico" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h7l-1 8 10-12h-7z"/></svg>240/240</div>
+        <div class="plus-square"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 5v14M5 12h14"/></svg></div>
+        <div class="stat-divider"></div>
+        <div class="plain-stat gold"><svg class="ico" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="9"/></svg>43,742,948</div>
+        <div class="stat-divider"></div>
+        <div class="plain-stat gem"><svg class="ico" viewBox="0 0 24 24" fill="currentColor"><path d="M6 3h12l4 6-10 12L2 9z"/></svg><span id="currencyDisplay2">0</span></div>
+        <div class="plus-square"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 5v14M5 12h14"/></svg></div>
+        <div class="plain-icon-btn" id="charGearBtn" title="Manage character"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.65 1.65 0 004.6 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></div>
+        <div class="plain-icon-btn" id="homeIconBtn1" title="Home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg></div>
       </div>
     </div>
     <div class="tasks-body">
       <div class="character-panel">
+        <div class="panel-bg" id="charPanelBg"></div>
         <div class="char-img-wrap" id="charImgWrap">
-          <div class="char-empty" id="charEmpty">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0116 0v1"/></svg>
-            <span>Tap to add a character</span>
-          </div>
-          <div class="bottom-fade"></div>
+          <div class="char-empty" id="charEmpty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0116 0v1"/></svg><span>Tap to add a character</span></div>
         </div>
         <div class="char-bottom-area">
+          <div class="char-roster-row" id="charRosterRow"></div>
           <div class="speech-bubble" id="speechBubble" style="display:none;"></div>
           <button class="char-manage-btn" id="charManageBtn">Manage character</button>
         </div>
@@ -488,18 +433,56 @@
       <div class="tasks-panel">
         <div class="category-tabs" id="categoryTabs"></div>
         <div class="task-list" id="taskList"></div>
-        <div class="claim-all-bar" id="claimAllBar" style="display:none;">
-          <div class="claim-all-left">
-            <div class="claim-all-title" id="claimAllTitle">Complete tasks to earn rewards</div>
-            <div class="claim-all-count" id="claimAllCount">Count 0/0</div>
-            <div class="progress-track small"><div class="progress-fill" id="claimAllProgress" style="width:0%;"></div></div>
+        <div class="footer-row" id="footerRow" style="display:none;">
+          <div class="claim-all-card">
+            <div class="claim-all-left">
+              <div class="claim-all-title"><span id="claimAllTitle">Complete tasks to earn rewards</span> <span class="claim-all-count" id="claimAllCount">Count 0/0</span></div>
+              <div class="progress-track small"><div class="progress-fill" id="claimAllProgress" style="width:0%;"></div></div>
+            </div>
+            <div class="reward-chip-box"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 3h12l4 6-10 12L2 9z"/></svg><span id="claimAllReward">x0</span></div>
           </div>
-          <div class="reward-chip"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 3h12l4 6-10 12L2 9z"/></svg><span id="claimAllReward">x0</span></div>
-          <button class="claim-all-btn" id="claimAllBtn" disabled>Claim All</button>
+          <button class="claim-all-btn-detached" id="claimAllBtn" disabled>Claim All</button>
         </div>
-        <button class="add-task-fab" id="addTaskFab" title="Add task">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>
-        </button>
+        <button class="add-task-fab" id="addTaskFab" title="Add task"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== GACHA / RECRUIT ===== -->
+  <div class="view" id="gachaView">
+    <div class="tasks-header">
+      <div class="back-circle" id="backToHome2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 6l-6 6 6 6"/></svg></div>
+      <h1>Recruit</h1>
+      <div class="spacer"></div>
+      <div class="plain-stat-row">
+        <div class="plain-stat gem"><svg class="ico" viewBox="0 0 24 24" fill="currentColor"><path d="M6 3h12l4 6-10 12L2 9z"/></svg><span id="currencyDisplay3">0</span></div>
+        <div class="plain-icon-btn" id="homeIconBtn2" title="Home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg></div>
+      </div>
+    </div>
+    <div class="gacha-hero">
+      <div class="rarity-rates-row" id="rarityRatesRow"></div>
+      <div class="pull-panel">
+        <h2>Pull for files</h2>
+        <p>Spend gems to unlock random items from your pool.</p>
+        <div class="pull-btn-row">
+          <button class="pull-btn" id="pullX1Btn">Pull x1<small id="pullX1Cost">30 gems</small></button>
+          <button class="pull-btn x10" id="pullX10Btn">Pull x10<small id="pullX10Cost">280 gems</small></button>
+        </div>
+      </div>
+      <button class="manage-pool-btn" id="managePoolBtn">Manage Pool &amp; Rarities</button>
+      <div class="collection-summary">
+        <div class="collection-stat"><div class="num" id="statWallpapers">0</div><div class="lbl">Wallpapers</div></div>
+        <div class="collection-stat"><div class="num" id="statCharacters">0</div><div class="lbl">Characters</div></div>
+        <div class="collection-stat"><div class="num" id="statVoice">0</div><div class="lbl">Voice Lines</div></div>
+        <div class="collection-stat"><div class="num" id="statTreats">0</div><div class="lbl">Treats</div></div>
+      </div>
+    </div>
+    <div class="pull-result-overlay" id="pullResultOverlay">
+      <div class="pull-result-card">
+        <div class="pull-result-thumb" id="pullResultThumb"></div>
+        <div class="pull-result-rarity" id="pullResultRarity"></div>
+        <div class="pull-result-name" id="pullResultName"></div>
+        <button class="btn primary" id="pullResultCloseBtn">Nice!</button>
       </div>
     </div>
   </div>
@@ -519,42 +502,83 @@
     <div class="modal-box">
       <h2>Character</h2>
       <div class="field">
-        <label>Character image</label>
+        <label>Add a character directly (no gacha needed)</label>
         <div class="thumb-grid" id="charThumbGrid"></div>
         <input type="file" id="charFileInput" accept="image/*" style="display:none;">
       </div>
       <div class="crop-editor" id="cropEditor" style="display:none;">
-        <label style="font-family:'Baloo 2';font-weight:700;font-size:12.5px;color:var(--text-mid);display:block;margin-bottom:6px;">Adjust crop</label>
+        <label style="font-family:'Baloo 2';font-weight:700;font-size:12.5px;color:var(--text-mid);display:block;margin-bottom:6px;">Adjust crop (active character)</label>
         <div class="crop-preview"><img id="cropPreviewImg" src=""></div>
         <div class="slider-row"><label>Zoom</label><input type="range" id="zoomSlider" min="100" max="300" value="100"></div>
         <div class="slider-row"><label>Vertical pos</label><input type="range" id="posYSlider" min="0" max="100" value="50"></div>
       </div>
       <div class="field">
-        <label>Name (optional)</label>
+        <label>Name (active character)</label>
         <input type="text" id="charNameInput" placeholder="e.g. Hoshino">
       </div>
       <div class="field">
-        <label>Dialogue lines</label>
+        <label>Dialogue lines (shown for whichever character is active)</label>
         <div class="dialogue-list" id="dialogueList"></div>
         <div class="field-row">
           <input type="text" id="newDialogueInput" placeholder="Type a line and press Add...">
-          <button class="btn primary" style="flex:0 0 auto;padding:10px 16px;" id="addDialogueBtn">Add</button>
+          <button class="btn primary small" id="addDialogueBtn">Add</button>
         </div>
       </div>
       <div class="modal-actions"><button class="btn secondary" id="closeCharModal">Done</button></div>
     </div>
   </div>
 
+  <!-- ===== MODAL: treats jukebox ===== -->
+  <div class="modal-overlay" id="treatsModal">
+    <div class="modal-box">
+      <h2>Treats</h2>
+      <div id="treatsList"></div>
+      <div class="modal-actions"><button class="btn secondary" id="closeTreatsModal">Close</button></div>
+    </div>
+  </div>
+
   <!-- ===== MODAL: add task ===== -->
   <div class="modal-overlay" id="taskModal">
     <div class="modal-box">
-      <h2>Add Task</h2>
+      <h2 id="taskModalTitle">Add Task</h2>
       <div class="field"><label>Task name</label><input type="text" id="taskTitleInput" placeholder="e.g. Finish math homework"></div>
       <div class="field"><label>Category</label><select id="taskCategorySelect"></select></div>
+
+      <div class="field">
+        <label>Subtasks (optional — if set, these drive the progress count)</label>
+        <div class="subtask-editor-list" id="subtaskEditorList"></div>
+        <div class="field-row">
+          <input type="text" id="newSubtaskInput" placeholder="Add a subtask and press Add...">
+          <button class="btn primary small" id="addSubtaskBtn">Add</button>
+        </div>
+      </div>
+
       <div class="field-row">
-        <div class="field"><label>Target count</label><input type="number" id="taskTargetInput" min="1" value="1"></div>
+        <div class="field" id="manualTargetField"><label>Target count</label><input type="number" id="taskTargetInput" min="1" value="1"></div>
         <div class="field"><label>Reward amount</label><input type="number" id="taskRewardInput" min="0" value="10"></div>
       </div>
+
+      <div class="field">
+        <label>Repeat</label>
+        <select id="taskRepeatSelect">
+          <option value="none">Does not repeat</option>
+          <option value="daily">Every day</option>
+          <option value="weekly">Every week on...</option>
+          <option value="monthly">Every month on...</option>
+        </select>
+      </div>
+      <div class="field" id="repeatWeekdayField" style="display:none;">
+        <label>Day of week</label>
+        <select id="taskRepeatWeekday">
+          <option value="0">Sunday</option><option value="1">Monday</option><option value="2">Tuesday</option>
+          <option value="3">Wednesday</option><option value="4">Thursday</option><option value="5">Friday</option><option value="6">Saturday</option>
+        </select>
+      </div>
+      <div class="field" id="repeatMonthdayField" style="display:none;">
+        <label>Day of month</label>
+        <input type="number" id="taskRepeatMonthday" min="1" max="31" value="1">
+      </div>
+
       <div class="modal-actions">
         <button class="btn secondary" id="cancelTaskBtn">Cancel</button>
         <button class="btn primary" id="saveTaskBtn">Save</button>
@@ -567,14 +591,8 @@
     <div class="modal-box">
       <h2>New Category</h2>
       <div class="field"><label>Category name</label><input type="text" id="newCategoryInput" placeholder="e.g. Reading"></div>
-      <div class="field">
-        <label>Tag color</label>
-        <select id="newCategoryColor">
-          <option value="daily">Blue</option>
-          <option value="weekly">Purple</option>
-          <option value="achievement">Orange</option>
-          <option value="custom">Teal</option>
-        </select>
+      <div class="field"><label>Tag color</label>
+        <select id="newCategoryColor"><option value="daily">Blue</option><option value="weekly">Purple</option><option value="achievement">Orange</option><option value="custom">Teal</option></select>
       </div>
       <div class="modal-actions">
         <button class="btn secondary" id="cancelCategoryBtn">Cancel</button>
@@ -583,482 +601,777 @@
     </div>
   </div>
 
+  <!-- ===== MODAL: manage pool & rarities ===== -->
+  <div class="modal-overlay" id="poolModal">
+    <div class="modal-box wide">
+      <h2>Manage Pool &amp; Rarities</h2>
+
+      <h3>Rarity Tiers</h3>
+      <div id="rarityList"></div>
+      <div class="rarity-total-note" id="rarityTotalNote"></div>
+      <div class="field-row">
+        <input type="text" id="newRarityName" placeholder="New rarity name (e.g. SSR)">
+        <input type="number" id="newRarityRate" placeholder="Rate %" style="max-width:90px;">
+        <select id="newRarityColor" style="max-width:110px;">
+          <option value="#8891a3">Gray</option><option value="#3d8bfd">Blue</option><option value="#7c5cff">Purple</option><option value="#ff8a3d">Orange</option><option value="#ffd23f">Gold</option>
+        </select>
+        <button class="btn primary small" id="addRarityBtn">Add</button>
+      </div>
+
+      <h3>Bulk Import</h3>
+      <input type="file" id="poolFileInput" accept="image/*,audio/*" multiple style="display:none;">
+      <button class="btn secondary" id="poolUploadBtn" style="margin-bottom:10px;">Choose images / audio files...</button>
+      <div class="quickset-row" id="quicksetRow" style="display:none;">
+        <select id="quicksetKind">
+          <option value="wallpaper">All: Wallpaper</option>
+          <option value="character">All: Character</option>
+          <option value="voice">All: Voice Line</option>
+          <option value="treat">All: Treat</option>
+        </select>
+        <select id="quicksetRarity"></select>
+        <button class="btn small" id="applyQuicksetBtn">Apply to all</button>
+      </div>
+      <div id="pendingFilesList"></div>
+      <button class="btn primary" id="commitPoolBtn" style="display:none;margin-bottom:16px;">Add All to Pool</button>
+
+      <h3>Current Pool</h3>
+      <div class="pool-list" id="poolList"></div>
+
+      <div class="modal-actions"><button class="btn secondary" id="closePoolModal">Close</button></div>
+    </div>
+  </div>
+
   <div class="toast" id="toast"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 3h12l4 6-10 12L2 9z"/></svg><span id="toastText"></span></div>
 
 </div>
 
 <script>
-/* ============================================================
-   IndexedDB helper
-============================================================ */
-const DB_NAME = 'senseisDeskDB';
-const DB_VERSION = 1;
+/* ============================================================ IndexedDB ============================================================ */
+const DB_NAME='senseisDeskDB', DB_VERSION=2;
 let db;
 function openDB(){
-  return new Promise((resolve, reject)=>{
-    const req = indexedDB.open(DB_NAME, DB_VERSION);
-    req.onupgradeneeded = (e)=>{
-      const d = e.target.result;
-      if(!d.objectStoreNames.contains('wallpapers')) d.createObjectStore('wallpapers', {keyPath:'id'});
-      if(!d.objectStoreNames.contains('tasks')) d.createObjectStore('tasks', {keyPath:'id'});
-      if(!d.objectStoreNames.contains('categories')) d.createObjectStore('categories', {keyPath:'id'});
-      if(!d.objectStoreNames.contains('dialogues')) d.createObjectStore('dialogues', {keyPath:'id'});
-      if(!d.objectStoreNames.contains('meta')) d.createObjectStore('meta', {keyPath:'key'});
+  return new Promise((resolve,reject)=>{
+    const req=indexedDB.open(DB_NAME,DB_VERSION);
+    req.onupgradeneeded=(e)=>{
+      const d=e.target.result;
+      ['wallpapers','tasks','categories','dialogues','meta','rarities','pool','characters','treats'].forEach(name=>{
+        if(!d.objectStoreNames.contains(name)) d.createObjectStore(name, {keyPath: name==='meta' ? 'key' : 'id'});
+      });
     };
-    req.onsuccess = (e)=>{ db = e.target.result; resolve(db); };
-    req.onerror = (e)=> reject(e);
+    req.onsuccess=(e)=>{ db=e.target.result; resolve(db); };
+    req.onerror=(e)=> reject(e);
   });
 }
-function tx(store, mode='readonly'){ return db.transaction(store, mode).objectStore(store); }
+function tx(store,mode='readonly'){ return db.transaction(store,mode).objectStore(store); }
 function dbGetAll(store){ return new Promise((resolve,reject)=>{ const req=tx(store).getAll(); req.onsuccess=()=>resolve(req.result||[]); req.onerror=reject; }); }
-function dbGet(store, key){ return new Promise((resolve,reject)=>{ const req=tx(store).get(key); req.onsuccess=()=>resolve(req.result); req.onerror=reject; }); }
-function dbPut(store, val){ return new Promise((resolve,reject)=>{ const req=tx(store,'readwrite').put(val); req.onsuccess=()=>resolve(val); req.onerror=reject; }); }
-function dbDelete(store, key){ return new Promise((resolve,reject)=>{ const req=tx(store,'readwrite').delete(key); req.onsuccess=()=>resolve(); req.onerror=reject; }); }
+function dbGet(store,key){ return new Promise((resolve,reject)=>{ const req=tx(store).get(key); req.onsuccess=()=>resolve(req.result); req.onerror=reject; }); }
+function dbPut(store,val){ return new Promise((resolve,reject)=>{ const req=tx(store,'readwrite').put(val); req.onsuccess=()=>resolve(val); req.onerror=reject; }); }
+function dbDelete(store,key){ return new Promise((resolve,reject)=>{ const req=tx(store,'readwrite').delete(key); req.onsuccess=()=>resolve(); req.onerror=reject; }); }
 function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,8); }
 function fileToDataURL(file){ return new Promise((resolve,reject)=>{ const r=new FileReader(); r.onload=()=>resolve(r.result); r.onerror=reject; r.readAsDataURL(file); }); }
+function escapeHtml(str){ const d=document.createElement('div'); d.textContent=str; return d.innerHTML; }
 
-/* ============================================================
-   State
-============================================================ */
+/* ============================================================ State ============================================================ */
 let state = {
-  wallpapers: [], wallpaperIndex: 0, currency: 0,
-  categories: [], activeCategory: 'all', tasks: [],
-  character: null, dialogues: [],
+  wallpapers:[], wallpaperIndex:0, currency:0,
+  categories:[], activeCategory:'all', tasks:[],
+  characters:[], activeCharacterId:null, dialogues:[],
+  rarities:[], pool:[], treats:[],
 };
-const DEFAULT_CATEGORIES = [
-  {id:'daily', name:'Daily', color:'daily'},
-  {id:'weekly', name:'Weekly', color:'weekly'},
-  {id:'achievement', name:'Achievement', color:'achievement'},
-];
-let pendingCrop = {zoom:100, posY:50};
+const DEFAULT_CATEGORIES=[{id:'daily',name:'Daily',color:'daily'},{id:'weekly',name:'Weekly',color:'weekly'},{id:'monthly',name:'Monthly',color:'monthly'},{id:'achievement',name:'Long Term',color:'achievement'}];
+const WEEKDAY_NAMES=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+function todayStr(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function daysInMonth(y,m){ return new Date(y,m+1,0).getDate(); }
+const DEFAULT_RARITIES=[{id:'n',name:'N',rate:60,color:'#8891a3'},{id:'r',name:'R',rate:30,color:'#3d8bfd'},{id:'sr',name:'SR',rate:8,color:'#7c5cff'},{id:'ssr',name:'SSR',rate:2,color:'#ffd23f'}];
+let pendingCrop={zoom:100,posY:50};
+let pendingPoolFiles=[]; // {tempId, file, dataURL, mime, kind, rarityId, name}
 
-/* ============================================================
-   Boot
-============================================================ */
+/* ============================================================ Boot ============================================================ */
 async function boot(){
   await openDB();
-  state.wallpapers = await dbGetAll('wallpapers');
-  state.tasks = await dbGetAll('tasks');
-  state.dialogues = await dbGetAll('dialogues');
-  state.categories = await dbGetAll('categories');
-  if(state.categories.length === 0){
-    for(const c of DEFAULT_CATEGORIES){ await dbPut('categories', c); }
-    state.categories = DEFAULT_CATEGORIES.slice();
-  }
-  const charRow = await dbGet('meta', 'character');
-  state.character = charRow ? charRow.value : null;
-  const curRow = await dbGet('meta', 'currency');
+  state.wallpapers=await dbGetAll('wallpapers');
+  state.tasks=await dbGetAll('tasks');
+  state.dialogues=await dbGetAll('dialogues');
+  state.categories=await dbGetAll('categories');
+  state.characters=await dbGetAll('characters');
+  state.rarities=await dbGetAll('rarities');
+  state.pool=await dbGetAll('pool');
+  state.treats=await dbGetAll('treats');
+  if(state.categories.length===0){ for(const c of DEFAULT_CATEGORIES) await dbPut('categories',c); state.categories=DEFAULT_CATEGORIES.slice(); }
+  if(state.rarities.length===0){ for(const r of DEFAULT_RARITIES) await dbPut('rarities',r); state.rarities=DEFAULT_RARITIES.slice(); }
+  const activeIdRow=await dbGet('meta','activeCharacterId');
+  state.activeCharacterId = activeIdRow ? activeIdRow.value : (state.characters[0]?.id || null);
+  const curRow=await dbGet('meta','currency');
   state.currency = curRow ? curRow.value : 0;
 
-  renderWallpaper();
-  renderCurrency();
-  renderCharacter();
-  renderCategoryTabs();
-  renderTasks();
-  populateCategorySelect();
+  await checkRecurringTasks();
+
+  renderWallpaper(); renderCurrency(); renderCharacter(); renderCategoryTabs(); renderTasks();
+  populateCategorySelect(); renderRarityRatesRow(); renderCollectionSummary();
+}
+
+async function checkRecurringTasks(){
+  const today=todayStr();
+  const now=new Date();
+  for(const t of state.tasks){
+    if(!t.recurrence || t.recurrence.type==='none') continue;
+    if(t.lastResetDate===today) continue;
+    let due=false;
+    if(t.recurrence.type==='daily'){ due=true; }
+    else if(t.recurrence.type==='weekly'){ due = now.getDay()===t.recurrence.weekday; }
+    else if(t.recurrence.type==='monthly'){
+      const dim=daysInMonth(now.getFullYear(), now.getMonth());
+      const targetDay=Math.min(t.recurrence.dayOfMonth, dim);
+      due = now.getDate()===targetDay;
+    }
+    if(due && (t.claimed || t.count>0)){
+      t.count=0; t.claimed=false; t.lastResetDate=today;
+      if(t.subtasks) t.subtasks.forEach(s=>s.done=false);
+      await dbPut('tasks', t);
+    } else if(due){
+      t.lastResetDate=today;
+      await dbPut('tasks', t);
+    }
+  }
 }
 
 let toastTimer;
 function showToast(msg){
-  const t = document.getElementById('toast');
-  document.getElementById('toastText').textContent = msg;
-  t.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=> t.classList.remove('show'), 1800);
+  const t=document.getElementById('toast');
+  document.getElementById('toastText').textContent=msg;
+  t.classList.add('show'); clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),1900);
 }
 
 /* Navigation */
-document.getElementById('taskIcon').addEventListener('click', ()=> switchView('tasksView'));
-document.getElementById('backToHome').addEventListener('click', ()=> switchView('homeView'));
-document.getElementById('homeIconBtn').addEventListener('click', ()=> switchView('homeView'));
 function switchView(id){
-  document.querySelectorAll('.view').forEach(v=> v.classList.remove('active'));
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById(id).classList.add('active');
+  if(id==='gachaView'){ renderRarityRatesRow(); renderCollectionSummary(); }
 }
+document.getElementById('taskIcon').addEventListener('click', ()=>switchView('tasksView'));
+document.getElementById('backToHome1').addEventListener('click', ()=>switchView('homeView'));
+document.getElementById('homeIconBtn1').addEventListener('click', ()=>switchView('homeView'));
+document.getElementById('backToHome2').addEventListener('click', ()=>switchView('homeView'));
+document.getElementById('homeIconBtn2').addEventListener('click', ()=>switchView('homeView'));
+document.getElementById('recruitNav').addEventListener('click', ()=>switchView('gachaView'));
+document.getElementById('pyroxeneIcon').addEventListener('click', ()=>switchView('gachaView'));
 
 /* Currency */
 function renderCurrency(){
-  document.getElementById('currencyDisplay').textContent = state.currency.toLocaleString();
-  document.getElementById('currencyDisplay2').textContent = state.currency.toLocaleString();
+  document.getElementById('currencyDisplay').textContent=state.currency.toLocaleString();
+  document.getElementById('currencyDisplay2').textContent=state.currency.toLocaleString();
+  document.getElementById('currencyDisplay3').textContent=state.currency.toLocaleString();
 }
 async function addCurrency(amount){
-  state.currency += amount;
-  await dbPut('meta', {key:'currency', value: state.currency});
+  state.currency+=amount;
+  await dbPut('meta',{key:'currency',value:state.currency});
   renderCurrency();
 }
 
 /* Wallpapers */
 function renderWallpaper(){
-  const layer = document.getElementById('wallpaperLayer');
-  const empty = document.getElementById('wallpaperEmpty');
-  layer.innerHTML = '';
-  document.getElementById('wpCycleLabel').textContent = state.wallpapers.length
-    ? `${state.wallpaperIndex+1}/${state.wallpapers.length}` : '0/0';
-  if(state.wallpapers.length === 0){ layer.appendChild(empty); return; }
-  if(state.wallpaperIndex >= state.wallpapers.length) state.wallpaperIndex = 0;
-  const wp = state.wallpapers[state.wallpaperIndex];
+  const layer=document.getElementById('wallpaperLayer');
+  const empty=document.getElementById('wallpaperEmpty');
+  layer.innerHTML='';
+  document.getElementById('wpCycleLabel').textContent = state.wallpapers.length ? `${state.wallpaperIndex+1}/${state.wallpapers.length}` : '0/0';
+  if(state.wallpapers.length===0){ layer.appendChild(empty); updateCharPanelBg(); return; }
+  if(state.wallpaperIndex>=state.wallpapers.length) state.wallpaperIndex=0;
+  const wp=state.wallpapers[state.wallpaperIndex];
   const el = wp.type.startsWith('video') ? document.createElement('video') : document.createElement('img');
-  el.src = wp.dataURL;
-  if(wp.type.startsWith('video')){ el.autoplay = true; el.loop = true; el.muted = true; el.playsInline = true; }
+  el.src=wp.dataURL;
+  if(wp.type.startsWith('video')){ el.autoplay=true; el.loop=true; el.muted=true; el.playsInline=true; }
   layer.appendChild(el);
+  updateCharPanelBg();
 }
-document.getElementById('wpCycleBtn').addEventListener('click', ()=>{
-  if(state.wallpapers.length === 0){ document.getElementById('wallpaperModal').classList.add('active'); renderWallpaperThumbs(); return; }
-  state.wallpaperIndex = (state.wallpaperIndex + 1) % state.wallpapers.length;
-  renderWallpaper();
-});
-document.getElementById('wpExpandBtn').addEventListener('click', ()=>{
-  renderWallpaperThumbs();
-  document.getElementById('wallpaperModal').classList.add('active');
-});
-document.getElementById('closeWallpaperModal').addEventListener('click', ()=> document.getElementById('wallpaperModal').classList.remove('active'));
-document.getElementById('wallpaperFileInput').addEventListener('change', async (e)=>{
-  const files = Array.from(e.target.files || []);
-  for(const f of files){
-    const dataURL = await fileToDataURL(f);
-    const row = {id: uid(), dataURL, type: f.type};
-    await dbPut('wallpapers', row);
-    state.wallpapers.push(row);
+function updateCharPanelBg(){
+  const bg=document.getElementById('charPanelBg');
+  if(!bg) return;
+  bg.innerHTML='';
+  if(state.wallpapers.length){
+    const wp=state.wallpapers[state.wallpaperIndex] || state.wallpapers[0];
+    if(!wp.type.startsWith('video')){ const img=document.createElement('img'); img.src=wp.dataURL; bg.appendChild(img); }
   }
-  e.target.value = '';
-  renderWallpaper();
+}
+document.getElementById('wpPrevBtn').addEventListener('click', ()=>{ if(!state.wallpapers.length)return; state.wallpaperIndex=(state.wallpaperIndex-1+state.wallpapers.length)%state.wallpapers.length; renderWallpaper(); });
+document.getElementById('wpNextBtn').addEventListener('click', ()=>{ if(!state.wallpapers.length)return; state.wallpaperIndex=(state.wallpaperIndex+1)%state.wallpapers.length; renderWallpaper(); });
+document.getElementById('wpCycleBtn').addEventListener('click', ()=>{
+  if(!state.wallpapers.length){ renderWallpaperThumbs(); document.getElementById('wallpaperModal').classList.add('active'); return; }
+  state.wallpaperIndex=(state.wallpaperIndex+1)%state.wallpapers.length; renderWallpaper();
+});
+document.getElementById('wpExpandBtn').addEventListener('click', ()=>{ renderWallpaperThumbs(); document.getElementById('wallpaperModal').classList.add('active'); });
+document.getElementById('closeWallpaperModal').addEventListener('click', ()=>document.getElementById('wallpaperModal').classList.remove('active'));
+document.getElementById('wallpaperFileInput').addEventListener('change', async(e)=>{
+  const files=Array.from(e.target.files||[]);
+  for(const f of files){ const dataURL=await fileToDataURL(f); const row={id:uid(),dataURL,type:f.type}; await dbPut('wallpapers',row); state.wallpapers.push(row); }
+  e.target.value=''; renderWallpaper();
   if(document.getElementById('wallpaperModal').classList.contains('active')) renderWallpaperThumbs();
   showToast(`Added ${files.length} wallpaper${files.length===1?'':'s'}`);
 });
 function renderWallpaperThumbs(){
-  const grid = document.getElementById('wallpaperThumbGrid');
-  grid.innerHTML = '';
+  const grid=document.getElementById('wallpaperThumbGrid'); grid.innerHTML='';
   state.wallpapers.forEach(wp=>{
-    const t = document.createElement('div'); t.className = 'thumb';
+    const t=document.createElement('div'); t.className='thumb';
     const el = wp.type.startsWith('video') ? document.createElement('video') : document.createElement('img');
-    el.src = wp.dataURL; if(wp.type.startsWith('video')){ el.muted = true; }
+    el.src=wp.dataURL; if(wp.type.startsWith('video')) el.muted=true;
     t.appendChild(el);
-    const rm = document.createElement('div'); rm.className = 'rm';
-    rm.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 6l12 12M18 6L6 18"/></svg>';
-    rm.addEventListener('click', async (ev)=>{
-      ev.stopPropagation();
-      await dbDelete('wallpapers', wp.id);
-      state.wallpapers = state.wallpapers.filter(w=> w.id !== wp.id);
-      renderWallpaperThumbs(); renderWallpaper();
-    });
+    const rm=document.createElement('div'); rm.className='rm';
+    rm.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+    rm.addEventListener('click', async(ev)=>{ ev.stopPropagation(); await dbDelete('wallpapers',wp.id); state.wallpapers=state.wallpapers.filter(w=>w.id!==wp.id); renderWallpaperThumbs(); renderWallpaper(); });
     t.appendChild(rm); grid.appendChild(t);
   });
-  const upload = document.createElement('div'); upload.className = 'upload-tile';
-  upload.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>';
-  upload.addEventListener('click', ()=> document.getElementById('wallpaperFileInput').click());
+  const upload=document.createElement('div'); upload.className='upload-tile';
+  upload.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>';
+  upload.addEventListener('click', ()=>document.getElementById('wallpaperFileInput').click());
   grid.appendChild(upload);
 }
 
-/* Character + dialogue + crop */
+/* Characters + dialogue + crop */
+function activeCharacter(){ return state.characters.find(c=>c.id===state.activeCharacterId) || null; }
 function applyCharCrop(imgEl, character){
-  if(!imgEl || !character) return;
-  const zoom = (character.zoom || 100) / 100;
-  const posY = character.posY != null ? character.posY : 50;
-  imgEl.style.objectPosition = `center ${posY}%`;
-  imgEl.style.transform = `scale(${zoom})`;
-  imgEl.style.transformOrigin = 'center center';
+  if(!imgEl||!character) return;
+  const zoom=(character.zoom||100)/100, posY=character.posY!=null?character.posY:50;
+  imgEl.style.objectPosition=`center ${posY}%`; imgEl.style.transform=`scale(${zoom})`; imgEl.style.transformOrigin='center center';
 }
 function renderCharacter(){
-  const wrap = document.getElementById('charImgWrap');
-  const existingFade = wrap.querySelector('.bottom-fade');
-  wrap.innerHTML = '';
-  if(state.character && state.character.imageDataURL){
-    const img = document.createElement('img');
-    img.className = 'char-img';
-    img.src = state.character.imageDataURL;
-    wrap.appendChild(img);
-    applyCharCrop(img, state.character);
+  const wrap=document.getElementById('charImgWrap'); wrap.innerHTML='';
+  const ch=activeCharacter();
+  if(ch && ch.imageDataURL){
+    const img=document.createElement('img'); img.className='char-img'; img.src=ch.imageDataURL; wrap.appendChild(img); applyCharCrop(img,ch);
   } else {
-    wrap.innerHTML = `<div class="char-empty">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0116 0v1"/></svg>
-      <span>Tap to add a character</span></div>`;
+    wrap.innerHTML=`<div class="char-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0116 0v1"/></svg><span>Tap to add a character</span></div>`;
   }
-  const fade = document.createElement('div'); fade.className = 'bottom-fade'; wrap.appendChild(fade);
-
-  const bubble = document.getElementById('speechBubble');
-  if(state.dialogues.length){ bubble.style.display = 'block'; sayRandomLine(); }
-  else { bubble.style.display = 'none'; }
+  const bubble=document.getElementById('speechBubble');
+  if(state.dialogues.length){ bubble.style.display='block'; sayRandomLine(); } else { bubble.style.display='none'; }
+  renderCharRoster();
 }
-function sayRandomLine(){
-  if(!state.dialogues.length) return;
-  const line = state.dialogues[Math.floor(Math.random()*state.dialogues.length)];
-  document.getElementById('speechBubble').textContent = line.text;
+function renderCharRoster(){
+  const row=document.getElementById('charRosterRow'); row.innerHTML='';
+  if(state.characters.length<2) return;
+  state.characters.forEach(c=>{
+    const t=document.createElement('div'); t.className='char-roster-thumb'+(c.id===state.activeCharacterId?' active':'');
+    const img=document.createElement('img'); img.src=c.imageDataURL; t.appendChild(img);
+    t.addEventListener('click', async()=>{ state.activeCharacterId=c.id; await dbPut('meta',{key:'activeCharacterId',value:c.id}); renderCharacter(); });
+    row.appendChild(t);
+  });
 }
-document.getElementById('charImgWrap').addEventListener('click', ()=>{
-  if(state.character && state.character.imageDataURL){ sayRandomLine(); }
-  else { openCharModal(); }
-});
+function sayRandomLine(){ if(!state.dialogues.length) return; const line=state.dialogues[Math.floor(Math.random()*state.dialogues.length)]; document.getElementById('speechBubble').textContent=line.text; }
+document.getElementById('charImgWrap').addEventListener('click', ()=>{ const ch=activeCharacter(); if(ch&&ch.imageDataURL) sayRandomLine(); else openCharModal(); });
 document.getElementById('charManageBtn').addEventListener('click', openCharModal);
 document.getElementById('charGearBtn').addEventListener('click', openCharModal);
-document.getElementById('closeCharModal').addEventListener('click', async ()=>{
-  const name = document.getElementById('charNameInput').value.trim();
-  if(state.character){
-    state.character.name = name;
-    state.character.zoom = pendingCrop.zoom;
-    state.character.posY = pendingCrop.posY;
-    await dbPut('meta', {key:'character', value: state.character});
-  }
-  document.getElementById('charModal').classList.remove('active');
-  renderCharacter();
+document.getElementById('closeCharModal').addEventListener('click', async()=>{
+  const name=document.getElementById('charNameInput').value.trim();
+  const ch=activeCharacter();
+  if(ch){ ch.name=name; ch.zoom=pendingCrop.zoom; ch.posY=pendingCrop.posY; await dbPut('characters',ch); }
+  document.getElementById('charModal').classList.remove('active'); renderCharacter();
 });
 function openCharModal(){
-  document.getElementById('charNameInput').value = state.character?.name || '';
-  pendingCrop = {zoom: state.character?.zoom || 100, posY: state.character?.posY != null ? state.character.posY : 50};
-  renderCharThumb();
-  renderDialogueList();
-  updateCropEditor();
+  const ch=activeCharacter();
+  document.getElementById('charNameInput').value=ch?.name||'';
+  pendingCrop={zoom:ch?.zoom||100, posY:ch?.posY!=null?ch.posY:50};
+  renderCharThumb(); renderDialogueList(); updateCropEditor();
   document.getElementById('charModal').classList.add('active');
 }
 function updateCropEditor(){
-  const editor = document.getElementById('cropEditor');
-  if(state.character && state.character.imageDataURL){
-    editor.style.display = 'block';
-    document.getElementById('cropPreviewImg').src = state.character.imageDataURL;
-    document.getElementById('zoomSlider').value = pendingCrop.zoom;
-    document.getElementById('posYSlider').value = pendingCrop.posY;
+  const editor=document.getElementById('cropEditor'); const ch=activeCharacter();
+  if(ch&&ch.imageDataURL){
+    editor.style.display='block';
+    document.getElementById('cropPreviewImg').src=ch.imageDataURL;
+    document.getElementById('zoomSlider').value=pendingCrop.zoom;
+    document.getElementById('posYSlider').value=pendingCrop.posY;
     applyCharCrop(document.getElementById('cropPreviewImg'), pendingCrop);
-  } else {
-    editor.style.display = 'none';
-  }
+  } else { editor.style.display='none'; }
 }
-document.getElementById('zoomSlider').addEventListener('input', (e)=>{
-  pendingCrop.zoom = parseInt(e.target.value);
-  applyCharCrop(document.getElementById('cropPreviewImg'), pendingCrop);
-});
-document.getElementById('posYSlider').addEventListener('input', (e)=>{
-  pendingCrop.posY = parseInt(e.target.value);
-  applyCharCrop(document.getElementById('cropPreviewImg'), pendingCrop);
-});
+document.getElementById('zoomSlider').addEventListener('input', e=>{ pendingCrop.zoom=parseInt(e.target.value); applyCharCrop(document.getElementById('cropPreviewImg'), pendingCrop); });
+document.getElementById('posYSlider').addEventListener('input', e=>{ pendingCrop.posY=parseInt(e.target.value); applyCharCrop(document.getElementById('cropPreviewImg'), pendingCrop); });
 function renderCharThumb(){
-  const grid = document.getElementById('charThumbGrid');
-  grid.innerHTML = '';
-  if(state.character && state.character.imageDataURL){
-    const t = document.createElement('div'); t.className = 'thumb';
-    const img = document.createElement('img'); img.src = state.character.imageDataURL; t.appendChild(img);
-    const rm = document.createElement('div'); rm.className = 'rm';
-    rm.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 6l12 12M18 6L6 18"/></svg>';
-    rm.addEventListener('click', async (ev)=>{
-      ev.stopPropagation();
-      state.character = null;
-      await dbPut('meta', {key:'character', value: null});
+  const grid=document.getElementById('charThumbGrid'); grid.innerHTML='';
+  state.characters.forEach(c=>{
+    const t=document.createElement('div'); t.className='thumb';
+    const img=document.createElement('img'); img.src=c.imageDataURL; t.appendChild(img);
+    const rm=document.createElement('div'); rm.className='rm';
+    rm.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+    rm.addEventListener('click', async(ev)=>{
+      ev.stopPropagation(); await dbDelete('characters',c.id);
+      state.characters=state.characters.filter(x=>x.id!==c.id);
+      if(state.activeCharacterId===c.id){ state.activeCharacterId=state.characters[0]?.id||null; await dbPut('meta',{key:'activeCharacterId',value:state.activeCharacterId}); }
       renderCharThumb(); renderCharacter(); updateCropEditor();
     });
     t.appendChild(rm); grid.appendChild(t);
-  }
-  const upload = document.createElement('div'); upload.className = 'upload-tile';
-  upload.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>';
-  upload.addEventListener('click', ()=> document.getElementById('charFileInput').click());
+  });
+  const upload=document.createElement('div'); upload.className='upload-tile';
+  upload.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>';
+  upload.addEventListener('click', ()=>document.getElementById('charFileInput').click());
   grid.appendChild(upload);
 }
-document.getElementById('charFileInput').addEventListener('change', async (e)=>{
-  const f = e.target.files[0];
-  if(!f) return;
-  const dataURL = await fileToDataURL(f);
-  state.character = {id:'main', imageDataURL: dataURL, name: state.character?.name || '', zoom:100, posY:50};
-  pendingCrop = {zoom:100, posY:50};
-  await dbPut('meta', {key:'character', value: state.character});
-  e.target.value = '';
-  renderCharThumb(); renderCharacter(); updateCropEditor();
+document.getElementById('charFileInput').addEventListener('change', async(e)=>{
+  const f=e.target.files[0]; if(!f) return;
+  const dataURL=await fileToDataURL(f);
+  const ch={id:uid(), imageDataURL:dataURL, name:'', zoom:100, posY:50};
+  await dbPut('characters',ch);
+  state.characters.push(ch);
+  state.activeCharacterId=ch.id;
+  await dbPut('meta',{key:'activeCharacterId',value:ch.id});
+  pendingCrop={zoom:100,posY:50};
+  e.target.value=''; renderCharThumb(); renderCharacter(); updateCropEditor();
 });
 function renderDialogueList(){
-  const list = document.getElementById('dialogueList');
-  list.innerHTML = '';
+  const list=document.getElementById('dialogueList'); list.innerHTML='';
   state.dialogues.forEach(d=>{
-    const row = document.createElement('div'); row.className = 'dialogue-row';
-    const span = document.createElement('span'); span.textContent = d.text; row.appendChild(span);
-    const rm = document.createElement('div'); rm.className = 'rm';
-    rm.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg>';
-    rm.addEventListener('click', async ()=>{
-      await dbDelete('dialogues', d.id);
-      state.dialogues = state.dialogues.filter(x=> x.id !== d.id);
-      renderDialogueList(); renderCharacter();
-    });
+    const row=document.createElement('div'); row.className='dialogue-row';
+    const span=document.createElement('span'); span.textContent=d.text; row.appendChild(span);
+    const rm=document.createElement('div'); rm.className='rm';
+    rm.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+    rm.addEventListener('click', async()=>{ await dbDelete('dialogues',d.id); state.dialogues=state.dialogues.filter(x=>x.id!==d.id); renderDialogueList(); renderCharacter(); });
     row.appendChild(rm); list.appendChild(row);
   });
 }
 document.getElementById('addDialogueBtn').addEventListener('click', addDialogueLine);
-document.getElementById('newDialogueInput').addEventListener('keydown', (e)=>{ if(e.key === 'Enter') addDialogueLine(); });
+document.getElementById('newDialogueInput').addEventListener('keydown', e=>{ if(e.key==='Enter') addDialogueLine(); });
 async function addDialogueLine(){
-  const input = document.getElementById('newDialogueInput');
-  const text = input.value.trim();
-  if(!text) return;
-  const row = {id: uid(), text};
-  await dbPut('dialogues', row);
-  state.dialogues.push(row);
-  input.value = '';
-  renderDialogueList(); renderCharacter();
+  const input=document.getElementById('newDialogueInput'); const text=input.value.trim(); if(!text) return;
+  const row={id:uid(),text}; await dbPut('dialogues',row); state.dialogues.push(row); input.value=''; renderDialogueList(); renderCharacter();
+}
+
+/* Treats jukebox */
+document.getElementById('treatsIcon').addEventListener('click', openTreatsModal);
+document.getElementById('closeTreatsModal').addEventListener('click', ()=>document.getElementById('treatsModal').classList.remove('active'));
+function openTreatsModal(){
+  const list=document.getElementById('treatsList'); list.innerHTML='';
+  if(!state.treats.length){ list.innerHTML='<p style="color:var(--text-soft);font-size:13.5px;">No treats unlocked yet — pull them from Recruit.</p>'; }
+  state.treats.forEach(t=>{
+    const row=document.createElement('div'); row.className='treat-row';
+    const play=document.createElement('div'); play.className='play-btn';
+    play.innerHTML='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+    play.addEventListener('click', ()=>{ const audio=new Audio(t.dataURL); audio.play().catch(()=>showToast('Could not play audio')); });
+    const span=document.createElement('span'); span.textContent=t.name||'Treat';
+    row.appendChild(play); row.appendChild(span); list.appendChild(row);
+  });
+  document.getElementById('treatsModal').classList.add('active');
+}
+function updateTreatsBadge(){
+  const badge=document.getElementById('treatsBadge');
+  if(state.treats.length){ badge.style.display='flex'; badge.textContent=state.treats.length; } else { badge.style.display='none'; }
 }
 
 /* Categories */
 function renderCategoryTabs(){
-  const wrap = document.getElementById('categoryTabs');
-  wrap.innerHTML = '';
-  const allTab = document.createElement('div');
-  allTab.className = 'cat-tab' + (state.activeCategory === 'all' ? ' active' : '');
-  allTab.textContent = 'All';
-  allTab.addEventListener('click', ()=>{ state.activeCategory = 'all'; renderCategoryTabs(); renderTasks(); });
+  const wrap=document.getElementById('categoryTabs'); wrap.innerHTML='';
+  const allTab=document.createElement('div'); allTab.className='cat-tab'+(state.activeCategory==='all'?' active':''); allTab.textContent='All';
+  if(state.tasks.some(t=>t.count>=t.target&&!t.claimed)){ const dot=document.createElement('div'); dot.className='dot'; allTab.appendChild(dot); }
+  allTab.addEventListener('click', ()=>{ state.activeCategory='all'; renderCategoryTabs(); renderTasks(); });
   wrap.appendChild(allTab);
   state.categories.forEach(cat=>{
-    const tab = document.createElement('div');
-    tab.className = 'cat-tab' + (state.activeCategory === cat.id ? ' active' : '');
-    tab.textContent = cat.name;
-    if(state.tasks.some(t=> t.categoryId === cat.id && t.count >= t.target && !t.claimed)){
-      const dot = document.createElement('div'); dot.className = 'dot'; tab.appendChild(dot);
-    }
-    tab.addEventListener('click', ()=>{ state.activeCategory = cat.id; renderCategoryTabs(); renderTasks(); });
+    const tab=document.createElement('div'); tab.className='cat-tab'+(state.activeCategory===cat.id?' active':''); tab.textContent=cat.name;
+    if(state.tasks.some(t=>t.categoryId===cat.id&&t.count>=t.target&&!t.claimed)){ const dot=document.createElement('div'); dot.className='dot'; tab.appendChild(dot); }
+    tab.addEventListener('click', ()=>{ state.activeCategory=cat.id; renderCategoryTabs(); renderTasks(); });
     wrap.appendChild(tab);
   });
-  const addTab = document.createElement('div');
-  addTab.className = 'cat-tab add-tab';
-  addTab.textContent = '+ New';
-  addTab.addEventListener('click', ()=>{
-    document.getElementById('newCategoryInput').value = '';
-    document.getElementById('categoryModal').classList.add('active');
-  });
+  const addTab=document.createElement('div'); addTab.className='cat-tab add-tab'; addTab.textContent='+ New';
+  addTab.addEventListener('click', ()=>{ document.getElementById('newCategoryInput').value=''; document.getElementById('categoryModal').classList.add('active'); });
   wrap.appendChild(addTab);
 }
-document.getElementById('cancelCategoryBtn').addEventListener('click', ()=> document.getElementById('categoryModal').classList.remove('active'));
-document.getElementById('saveCategoryBtn').addEventListener('click', async ()=>{
-  const name = document.getElementById('newCategoryInput').value.trim();
-  if(!name) return;
-  const color = document.getElementById('newCategoryColor').value;
-  const cat = {id: uid(), name, color};
-  await dbPut('categories', cat);
-  state.categories.push(cat);
-  document.getElementById('categoryModal').classList.remove('active');
-  renderCategoryTabs(); populateCategorySelect();
+document.getElementById('cancelCategoryBtn').addEventListener('click', ()=>document.getElementById('categoryModal').classList.remove('active'));
+document.getElementById('saveCategoryBtn').addEventListener('click', async()=>{
+  const name=document.getElementById('newCategoryInput').value.trim(); if(!name) return;
+  const color=document.getElementById('newCategoryColor').value;
+  const cat={id:uid(),name,color}; await dbPut('categories',cat); state.categories.push(cat);
+  document.getElementById('categoryModal').classList.remove('active'); renderCategoryTabs(); populateCategorySelect();
 });
 function populateCategorySelect(){
-  const sel = document.getElementById('taskCategorySelect');
-  sel.innerHTML = '';
-  state.categories.forEach(cat=>{
-    const opt = document.createElement('option'); opt.value = cat.id; opt.textContent = cat.name; sel.appendChild(opt);
-  });
+  const sel=document.getElementById('taskCategorySelect'); sel.innerHTML='';
+  state.categories.forEach(cat=>{ const opt=document.createElement('option'); opt.value=cat.id; opt.textContent=cat.name; sel.appendChild(opt); });
 }
 
 /* Tasks */
-function categoryFor(id){ return state.categories.find(c=> c.id === id); }
-function escapeHtml(str){ const d=document.createElement('div'); d.textContent=str; return d.innerHTML; }
-
+function categoryFor(id){ return state.categories.find(c=>c.id===id); }
 function renderTasks(){
-  const list = document.getElementById('taskList');
-  list.innerHTML = '';
-  let tasks = state.tasks;
-  if(state.activeCategory !== 'all') tasks = tasks.filter(t=> t.categoryId === state.activeCategory);
-  tasks = tasks.slice().sort((a,b)=> (a.claimed - b.claimed) || (b.createdAt - a.createdAt));
-
-  if(tasks.length === 0){
-    const empty = document.createElement('div'); empty.className = 'empty-state';
-    empty.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
-      <b>No tasks here yet</b><span>Tap the + button to create one, Sensei.</span>`;
+  const list=document.getElementById('taskList'); list.innerHTML='';
+  let tasks=state.tasks;
+  if(state.activeCategory!=='all') tasks=tasks.filter(t=>t.categoryId===state.activeCategory);
+  tasks=tasks.slice().sort((a,b)=>(a.claimed-b.claimed)||(b.createdAt-a.createdAt));
+  if(tasks.length===0){
+    const empty=document.createElement('div'); empty.className='empty-state';
+    empty.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><b>No tasks here yet</b><span>Tap the + button to create one, Sensei.</span>`;
     list.appendChild(empty);
   } else {
     tasks.forEach(t=>{
-      const cat = categoryFor(t.categoryId);
-      const card = document.createElement('div');
-      card.className = 'task-card' + (t.claimed ? ' claimed' : '');
-      const pct = Math.min(100, Math.round((t.count / t.target) * 100));
-      const canClaim = t.count >= t.target && !t.claimed;
-      card.innerHTML = `
+      const cat=categoryFor(t.categoryId);
+      const hasSubtasks = t.subtasks && t.subtasks.length>0;
+      const effTarget = hasSubtasks ? t.subtasks.length : t.target;
+      const effCount = hasSubtasks ? t.subtasks.filter(s=>s.done).length : t.count;
+      const card=document.createElement('div'); card.className='task-card'+(t.claimed?' claimed':'');
+      const pct=Math.min(100, Math.round((effCount/effTarget)*100));
+      const canClaim=effCount>=effTarget && !t.claimed;
+      const repeatLabel = !t.recurrence||t.recurrence.type==='none' ? '' :
+        t.recurrence.type==='daily' ? 'Daily repeat' :
+        t.recurrence.type==='weekly' ? `Weekly · ${WEEKDAY_NAMES[t.recurrence.weekday].slice(0,3)}` :
+        `Monthly · day ${t.recurrence.dayOfMonth}`;
+      const subtaskRows = hasSubtasks ? t.subtasks.map(s=>`
+        <div class="subtask-row${s.done?' done':''}"><input type="checkbox" data-subtask="${t.id}|${s.id}" ${s.done?'checked':''}><span>${escapeHtml(s.text)}</span></div>
+      `).join('') : '';
+      card.innerHTML=`
         <div class="task-del" data-id="${t.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M6 6l12 12M18 6L6 18"/></svg></div>
+        <div class="task-edit" data-edit="${t.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg></div>
         <div class="task-card-left">
           <div class="task-top-row">
-            <span class="task-tag tag-${cat ? cat.color : 'custom'}">${cat ? cat.name : 'Task'}</span>
+            <span class="task-tag tag-${cat?cat.color:'custom'}">${cat?cat.name:'Task'}</span>
             <span class="task-title">${escapeHtml(t.title)}</span>
+            ${repeatLabel?`<span class="task-repeat-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 12a9 9 0 11-3-6.7"/><path d="M21 3v6h-6"/></svg>${repeatLabel}</span>`:''}
           </div>
-          <div class="task-count-row"><span class="count-label">Count</span><span class="count-value">${t.count}/${t.target}</span></div>
+          ${hasSubtasks?`<div class="subtask-toggle" data-toggle="${t.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M9 6l6 6-6 6"/></svg>${effCount}/${effTarget} subtasks</div>
+          <div class="subtask-list" id="subtasks-${t.id}">${subtaskRows}</div>`
+          : `<div class="task-count-row"><span class="count-label">Count</span><span class="count-value">${effCount} / ${effTarget}</span></div>`}
           <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
         </div>
         <div class="task-card-right">
-          <div class="reward-chip"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 3h12l4 6-10 12L2 9z"/></svg><span>x${t.reward}</span></div>
-          ${t.claimed ? `<button class="task-action-btn claimed" disabled>Claimed</button>`
-            : canClaim ? `<button class="task-action-btn claim" data-claim="${t.id}">Claim</button>`
+          <div class="reward-chip-box"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 3h12l4 6-10 12L2 9z"/></svg><span>x${t.reward}</span></div>
+          ${t.claimed?`<button class="task-action-btn claimed" disabled>Claimed</button>`
+            : canClaim?`<button class="task-action-btn claim" data-claim="${t.id}">Claim</button>`
+            : hasSubtasks ? `<button class="task-action-btn progress" disabled style="opacity:.4;">+1</button>`
             : `<button class="task-action-btn progress" data-progress="${t.id}">+1</button>`}
         </div>`;
       list.appendChild(card);
     });
-    list.querySelectorAll('[data-progress]').forEach(btn=> btn.addEventListener('click', ()=> bumpTask(btn.dataset.progress)));
-    list.querySelectorAll('[data-claim]').forEach(btn=> btn.addEventListener('click', ()=> claimTask(btn.dataset.claim)));
-    list.querySelectorAll('.task-del').forEach(btn=> btn.addEventListener('click', ()=> deleteTask(btn.dataset.id)));
+    list.querySelectorAll('[data-progress]:not([disabled])').forEach(btn=>btn.addEventListener('click', ()=>bumpTask(btn.dataset.progress)));
+    list.querySelectorAll('[data-claim]').forEach(btn=>btn.addEventListener('click', ()=>claimTask(btn.dataset.claim)));
+    list.querySelectorAll('.task-del').forEach(btn=>btn.addEventListener('click', ()=>deleteTask(btn.dataset.id)));
+    list.querySelectorAll('.task-edit').forEach(btn=>btn.addEventListener('click', ()=>openTaskModal(btn.dataset.edit)));
+    list.querySelectorAll('.subtask-toggle').forEach(btn=>btn.addEventListener('click', ()=>{
+      btn.classList.toggle('open');
+      document.getElementById('subtasks-'+btn.dataset.toggle).classList.toggle('open');
+    }));
+    list.querySelectorAll('[data-subtask]').forEach(cb=>cb.addEventListener('change', ()=>{
+      const [taskId, subId]=cb.dataset.subtask.split('|');
+      toggleSubtask(taskId, subId);
+    }));
   }
-  renderClaimAllBar();
-  updateTaskBadge();
+  renderFooterRow(); updateTaskBadge();
 }
-function renderClaimAllBar(){
-  const relevant = state.activeCategory === 'all' ? state.tasks : state.tasks.filter(t=> t.categoryId === state.activeCategory);
-  const bar = document.getElementById('claimAllBar');
-  if(relevant.length === 0){ bar.style.display = 'none'; return; }
-  bar.style.display = 'flex';
-  const claimed = relevant.filter(t=> t.claimed).length;
-  const claimableNow = relevant.filter(t=> t.count >= t.target && !t.claimed);
-  const total = relevant.length;
-  const label = state.activeCategory === 'all' ? 'Complete tasks to earn rewards' : `Complete ${categoryFor(state.activeCategory)?.name || ''} tasks`;
-  document.getElementById('claimAllTitle').textContent = label;
+function renderFooterRow(){
+  const relevant = state.activeCategory==='all' ? state.tasks : state.tasks.filter(t=>t.categoryId===state.activeCategory);
+  const row=document.getElementById('footerRow');
+  if(relevant.length===0){ row.style.display='none'; return; }
+  row.style.display='flex';
+  const claimed=relevant.filter(t=>t.claimed).length;
+  const claimableNow=relevant.filter(t=>t.count>=t.target && !t.claimed);
+  const total=relevant.length;
+  document.getElementById('claimAllTitle').textContent = state.activeCategory==='all' ? 'Complete tasks to earn rewards' : `Complete ${categoryFor(state.activeCategory)?.name||''} tasks`;
   document.getElementById('claimAllCount').textContent = `Count ${claimed}/${total}`;
-  document.getElementById('claimAllProgress').style.width = `${total ? Math.round((claimed/total)*100) : 0}%`;
-  const rewardSum = claimableNow.reduce((s,t)=> s + t.reward, 0);
-  document.getElementById('claimAllReward').textContent = `x${rewardSum}`;
-  const btn = document.getElementById('claimAllBtn');
-  btn.disabled = claimableNow.length === 0;
-  btn.onclick = async ()=>{
-    let sum = 0;
-    for(const t of claimableNow){ t.claimed = true; await dbPut('tasks', t); sum += t.reward; }
+  document.getElementById('claimAllProgress').style.width = `${total?Math.round((claimed/total)*100):0}%`;
+  const rewardSum=claimableNow.reduce((s,t)=>s+t.reward,0);
+  document.getElementById('claimAllReward').textContent=`x${rewardSum}`;
+  const btn=document.getElementById('claimAllBtn');
+  btn.disabled = claimableNow.length===0;
+  btn.onclick=async()=>{
+    let sum=0;
+    for(const t of claimableNow){ t.claimed=true; await dbPut('tasks',t); sum+=t.reward; }
     if(sum){ await addCurrency(sum); showToast(`+${sum} claimed!`); }
-    renderTasks();
+    renderTasks(); renderCategoryTabs();
   };
 }
 function updateTaskBadge(){
-  const claimable = state.tasks.filter(t=> t.count >= t.target && !t.claimed).length;
-  const badge = document.getElementById('taskSideBadge');
-  if(claimable > 0){ badge.style.display = 'flex'; badge.textContent = claimable; }
-  else { badge.style.display = 'none'; }
+  const claimable=state.tasks.filter(t=>t.count>=t.target && !t.claimed).length;
+  const badge=document.getElementById('taskSideBadge');
+  if(claimable>0){ badge.style.display='flex'; badge.textContent=claimable; } else { badge.style.display='none'; }
 }
-async function bumpTask(id){
-  const t = state.tasks.find(x=> x.id === id);
-  if(!t) return;
-  t.count = Math.min(t.target, t.count + 1);
-  await dbPut('tasks', t);
-  renderTasks(); renderCategoryTabs();
+async function bumpTask(id){ const t=state.tasks.find(x=>x.id===id); if(!t) return; t.count=Math.min(t.target,t.count+1); await dbPut('tasks',t); renderTasks(); renderCategoryTabs(); }
+async function toggleSubtask(taskId, subId){
+  const t=state.tasks.find(x=>x.id===taskId); if(!t||!t.subtasks) return;
+  const s=t.subtasks.find(x=>x.id===subId); if(!s) return;
+  s.done=!s.done;
+  t.target=t.subtasks.length; t.count=t.subtasks.filter(x=>x.done).length;
+  await dbPut('tasks',t); renderTasks(); renderCategoryTabs();
 }
-async function claimTask(id){
-  const t = state.tasks.find(x=> x.id === id);
-  if(!t || t.claimed) return;
-  t.claimed = true;
-  await dbPut('tasks', t);
-  await addCurrency(t.reward);
-  renderTasks(); renderCategoryTabs();
-  showToast(`+${t.reward} claimed!`);
-}
-async function deleteTask(id){
-  await dbDelete('tasks', id);
-  state.tasks = state.tasks.filter(t=> t.id !== id);
-  renderTasks(); renderCategoryTabs();
-}
+async function claimTask(id){ const t=state.tasks.find(x=>x.id===id); if(!t||t.claimed) return; t.claimed=true; await dbPut('tasks',t); await addCurrency(t.reward); renderTasks(); renderCategoryTabs(); showToast(`+${t.reward} claimed!`); }
+async function deleteTask(id){ await dbDelete('tasks',id); state.tasks=state.tasks.filter(t=>t.id!==id); renderTasks(); renderCategoryTabs(); }
 
-document.getElementById('addTaskFab').addEventListener('click', ()=>{
-  document.getElementById('taskTitleInput').value = '';
-  document.getElementById('taskTargetInput').value = 1;
-  document.getElementById('taskRewardInput').value = 10;
-  if(state.activeCategory !== 'all'){ document.getElementById('taskCategorySelect').value = state.activeCategory; }
+let editingTaskId=null;
+let pendingSubtasks=[];
+
+document.getElementById('addTaskFab').addEventListener('click', ()=> openTaskModal(null));
+function openTaskModal(taskId){
+  editingTaskId=taskId;
+  const t = taskId ? state.tasks.find(x=>x.id===taskId) : null;
+  document.getElementById('taskModalTitle').textContent = t ? 'Edit Task' : 'Add Task';
+  document.getElementById('taskTitleInput').value = t ? t.title : '';
+  document.getElementById('taskTargetInput').value = t ? t.target : 1;
+  document.getElementById('taskRewardInput').value = t ? t.reward : 10;
+  populateCategorySelect();
+  document.getElementById('taskCategorySelect').value = t ? t.categoryId : (state.activeCategory!=='all' ? state.activeCategory : state.categories[0]?.id);
+  pendingSubtasks = t && t.subtasks ? t.subtasks.map(s=>({...s})) : [];
+  renderSubtaskEditor();
+  const rec = t?.recurrence || {type:'none'};
+  document.getElementById('taskRepeatSelect').value = rec.type;
+  document.getElementById('taskRepeatWeekday').value = rec.weekday!=null ? rec.weekday : new Date().getDay();
+  document.getElementById('taskRepeatMonthday').value = rec.dayOfMonth || new Date().getDate();
+  updateRepeatFieldVisibility();
   document.getElementById('taskModal').classList.add('active');
-});
-document.getElementById('cancelTaskBtn').addEventListener('click', ()=> document.getElementById('taskModal').classList.remove('active'));
-document.getElementById('saveTaskBtn').addEventListener('click', async ()=>{
-  const title = document.getElementById('taskTitleInput').value.trim();
-  if(!title) return;
-  const categoryId = document.getElementById('taskCategorySelect').value;
-  const target = Math.max(1, parseInt(document.getElementById('taskTargetInput').value) || 1);
-  const reward = Math.max(0, parseInt(document.getElementById('taskRewardInput').value) || 0);
-  const task = {id: uid(), title, categoryId, target, reward, count:0, claimed:false, createdAt: Date.now()};
-  await dbPut('tasks', task);
-  state.tasks.push(task);
-  document.getElementById('taskModal').classList.remove('active');
-  renderTasks(); renderCategoryTabs();
+}
+function renderSubtaskEditor(){
+  const list=document.getElementById('subtaskEditorList'); list.innerHTML='';
+  pendingSubtasks.forEach(s=>{
+    const row=document.createElement('div'); row.className='subtask-editor-row';
+    const span=document.createElement('span'); span.textContent=s.text; row.appendChild(span);
+    const rm=document.createElement('div'); rm.className='rm';
+    rm.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+    rm.addEventListener('click', ()=>{ pendingSubtasks=pendingSubtasks.filter(x=>x.id!==s.id); renderSubtaskEditor(); updateManualTargetVisibility(); });
+    row.appendChild(rm); list.appendChild(row);
+  });
+  updateManualTargetVisibility();
+}
+function updateManualTargetVisibility(){
+  document.getElementById('manualTargetField').style.display = pendingSubtasks.length ? 'none' : 'block';
+}
+document.getElementById('addSubtaskBtn').addEventListener('click', addPendingSubtask);
+document.getElementById('newSubtaskInput').addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); addPendingSubtask(); } });
+function addPendingSubtask(){
+  const input=document.getElementById('newSubtaskInput'); const text=input.value.trim(); if(!text) return;
+  pendingSubtasks.push({id:uid(), text, done:false}); input.value=''; renderSubtaskEditor();
+}
+document.getElementById('taskRepeatSelect').addEventListener('change', updateRepeatFieldVisibility);
+function updateRepeatFieldVisibility(){
+  const val=document.getElementById('taskRepeatSelect').value;
+  document.getElementById('repeatWeekdayField').style.display = val==='weekly' ? 'block' : 'none';
+  document.getElementById('repeatMonthdayField').style.display = val==='monthly' ? 'block' : 'none';
+}
+document.getElementById('cancelTaskBtn').addEventListener('click', ()=>document.getElementById('taskModal').classList.remove('active'));
+document.getElementById('saveTaskBtn').addEventListener('click', async()=>{
+  const title=document.getElementById('taskTitleInput').value.trim(); if(!title) return;
+  const categoryId=document.getElementById('taskCategorySelect').value;
+  const reward=Math.max(0, parseInt(document.getElementById('taskRewardInput').value)||0);
+  const repeatType=document.getElementById('taskRepeatSelect').value;
+  const recurrence = repeatType==='none' ? {type:'none'}
+    : repeatType==='weekly' ? {type:'weekly', weekday:parseInt(document.getElementById('taskRepeatWeekday').value)}
+    : repeatType==='monthly' ? {type:'monthly', dayOfMonth:Math.max(1,Math.min(31,parseInt(document.getElementById('taskRepeatMonthday').value)||1))}
+    : {type:'daily'};
+
+  if(editingTaskId){
+    const t=state.tasks.find(x=>x.id===editingTaskId); if(!t) return;
+    t.title=title; t.categoryId=categoryId; t.reward=reward; t.recurrence=recurrence;
+    t.subtasks = pendingSubtasks.length ? pendingSubtasks : undefined;
+    if(pendingSubtasks.length){ t.target=pendingSubtasks.length; t.count=pendingSubtasks.filter(s=>s.done).length; }
+    else { t.target=Math.max(1, parseInt(document.getElementById('taskTargetInput').value)||1); t.count=Math.min(t.count,t.target); }
+    await dbPut('tasks',t);
+  } else {
+    const target = pendingSubtasks.length ? pendingSubtasks.length : Math.max(1, parseInt(document.getElementById('taskTargetInput').value)||1);
+    const task={id:uid(),title,categoryId,target,reward,count:0,claimed:false,createdAt:Date.now(),
+      subtasks: pendingSubtasks.length ? pendingSubtasks : undefined, recurrence, lastResetDate: todayStr()};
+    await dbPut('tasks',task); state.tasks.push(task);
+  }
+  document.getElementById('taskModal').classList.remove('active'); renderTasks(); renderCategoryTabs();
 });
 
-document.querySelectorAll('.modal-overlay').forEach(ov=>{
-  ov.addEventListener('click', (e)=>{ if(e.target === ov) ov.classList.remove('active'); });
+/* ============================================================ GACHA ============================================================ */
+const PULL_COST_X1=30, PULL_COST_X10=280;
+function rarityFor(id){ return state.rarities.find(r=>r.id===id); }
+function renderRarityRatesRow(){
+  const row=document.getElementById('rarityRatesRow'); if(!row) return; row.innerHTML='';
+  state.rarities.forEach(r=>{
+    const chip=document.createElement('div'); chip.className='rarity-chip';
+    chip.innerHTML=`<span class="rarity-swatch" style="background:${r.color}"></span><span>${escapeHtml(r.name)} — ${r.rate}%</span>`;
+    row.appendChild(chip);
+  });
+  document.getElementById('pullX1Cost').textContent=`${PULL_COST_X1} gems`;
+  document.getElementById('pullX10Cost').textContent=`${PULL_COST_X10} gems`;
+}
+function renderCollectionSummary(){
+  document.getElementById('statWallpapers').textContent = state.pool.filter(p=>p.kind==='wallpaper'&&p.unlocked).length;
+  document.getElementById('statCharacters').textContent = state.pool.filter(p=>p.kind==='character'&&p.unlocked).length;
+  document.getElementById('statVoice').textContent = state.pool.filter(p=>p.kind==='voice'&&p.unlocked).length;
+  document.getElementById('statTreats').textContent = state.pool.filter(p=>p.kind==='treat'&&p.unlocked).length;
+  updateTreatsBadge();
+}
+function weightedRarityPick(){
+  const usable=state.rarities.filter(r=> state.pool.some(p=>p.rarityId===r.id));
+  const total=usable.reduce((s,r)=>s+r.rate,0);
+  if(total<=0) return null;
+  let roll=Math.random()*total;
+  for(const r of usable){ if(roll<r.rate) return r.id; roll-=r.rate; }
+  return usable[usable.length-1]?.id || null;
+}
+async function unlockPoolItem(item){
+  item.unlocked=true; await dbPut('pool',item);
+  if(item.kind==='wallpaper'){
+    const wp={id:uid(), dataURL:item.dataURL, type:item.mime||'image/png'};
+    await dbPut('wallpapers',wp); state.wallpapers.push(wp); renderWallpaper();
+  } else if(item.kind==='character'){
+    const ch={id:uid(), imageDataURL:item.dataURL, name:item.name||'', zoom:100, posY:50};
+    await dbPut('characters',ch); state.characters.push(ch);
+    if(!state.activeCharacterId){ state.activeCharacterId=ch.id; await dbPut('meta',{key:'activeCharacterId',value:ch.id}); }
+    renderCharacter();
+  } else if(item.kind==='voice'){
+    const d={id:uid(), text:'🔊 '+(item.name||'Voice line')};
+    await dbPut('dialogues',d); state.dialogues.push(d); renderCharacter();
+  } else if(item.kind==='treat'){
+    const t={id:uid(), name:item.name||'Treat', dataURL:item.dataURL};
+    await dbPut('treats',t); state.treats.push(t); updateTreatsBadge();
+  }
+}
+async function doPull(count){
+  const cost = count===10 ? PULL_COST_X10 : PULL_COST_X1*count;
+  if(state.pool.length===0){ showToast('Add items to the pool first'); return; }
+  if(state.currency<cost){ showToast('Not enough gems'); return; }
+  await addCurrency(-cost);
+  let lastResult=null;
+  for(let i=0;i<count;i++){
+    const rarityId=weightedRarityPick();
+    if(!rarityId) break;
+    const candidates=state.pool.filter(p=>p.rarityId===rarityId);
+    const item=candidates[Math.floor(Math.random()*candidates.length)];
+    if(item.unlocked){
+      const refund=Math.round(PULL_COST_X1/3);
+      await addCurrency(refund);
+      lastResult={dup:true,item,refund};
+    } else {
+      await unlockPoolItem(item);
+      lastResult={dup:false,item};
+    }
+  }
+  renderCollectionSummary();
+  if(lastResult) showPullResult(lastResult);
+}
+function showPullResult(result){
+  const {item,dup,refund}=result;
+  const rarity=rarityFor(item.rarityId);
+  const thumb=document.getElementById('pullResultThumb'); thumb.innerHTML='';
+  if(item.kind==='voice'||item.kind==='treat'){
+    thumb.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>';
+  } else {
+    const img=document.createElement('img'); img.src=item.dataURL; thumb.appendChild(img);
+  }
+  document.getElementById('pullResultRarity').textContent = rarity ? rarity.name : '';
+  document.getElementById('pullResultRarity').style.color = rarity ? rarity.color : 'var(--text-dark)';
+  document.getElementById('pullResultName').textContent = dup ? `Duplicate ${item.name||''} (+${refund} gems)` : (item.name || 'Unlocked!');
+  document.getElementById('pullResultOverlay').classList.add('active');
+}
+document.getElementById('pullResultCloseBtn').addEventListener('click', ()=>document.getElementById('pullResultOverlay').classList.remove('active'));
+document.getElementById('pullX1Btn').addEventListener('click', ()=>doPull(1));
+document.getElementById('pullX10Btn').addEventListener('click', ()=>doPull(10));
+
+/* Pool & rarity management modal */
+document.getElementById('managePoolBtn').addEventListener('click', openPoolModal);
+document.getElementById('closePoolModal').addEventListener('click', ()=>document.getElementById('poolModal').classList.remove('active'));
+function openPoolModal(){
+  renderRarityList(); renderPoolList(); pendingPoolFiles=[]; renderPendingFiles();
+  document.getElementById('poolModal').classList.add('active');
+}
+function renderRarityList(){
+  const list=document.getElementById('rarityList'); list.innerHTML='';
+  state.rarities.forEach(r=>{
+    const row=document.createElement('div'); row.className='rarity-row';
+    row.innerHTML=`<span class="rarity-swatch" style="background:${r.color}"></span><span class="name">${escapeHtml(r.name)}</span>`;
+    const rateInput=document.createElement('input'); rateInput.type='number'; rateInput.value=r.rate; rateInput.min=0; rateInput.max=100;
+    rateInput.addEventListener('change', async()=>{ r.rate=Math.max(0,parseInt(rateInput.value)||0); await dbPut('rarities',r); renderRarityTotalNote(); renderRarityRatesRow(); });
+    row.appendChild(rateInput);
+    const rm=document.createElement('div'); rm.className='rm';
+    rm.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+    rm.addEventListener('click', async()=>{
+      if(state.pool.some(p=>p.rarityId===r.id)){ showToast('Remove pool items using this rarity first'); return; }
+      await dbDelete('rarities',r.id); state.rarities=state.rarities.filter(x=>x.id!==r.id);
+      renderRarityList(); renderRarityRatesRow();
+    });
+    row.appendChild(rm); list.appendChild(row);
+  });
+  renderRarityTotalNote();
+  populateQuicksetRarity();
+}
+function renderRarityTotalNote(){
+  const total=state.rarities.reduce((s,r)=>s+r.rate,0);
+  const note=document.getElementById('rarityTotalNote');
+  note.textContent=`Total: ${total}% ${total!==100?'(auto-normalized when pulling)':''}`;
+  note.className='rarity-total-note'+(total!==100?' warn':'');
+}
+document.getElementById('addRarityBtn').addEventListener('click', async()=>{
+  const name=document.getElementById('newRarityName').value.trim(); if(!name) return;
+  const rate=Math.max(0, parseInt(document.getElementById('newRarityRate').value)||0);
+  const color=document.getElementById('newRarityColor').value;
+  const r={id:uid(),name,rate,color}; await dbPut('rarities',r); state.rarities.push(r);
+  document.getElementById('newRarityName').value=''; document.getElementById('newRarityRate').value='';
+  renderRarityList(); renderRarityRatesRow();
 });
+
+document.getElementById('poolUploadBtn').addEventListener('click', ()=>document.getElementById('poolFileInput').click());
+document.getElementById('poolFileInput').addEventListener('change', async(e)=>{
+  const files=Array.from(e.target.files||[]);
+  for(const f of files){
+    const dataURL=await fileToDataURL(f);
+    const isAudio=f.type.startsWith('audio');
+    pendingPoolFiles.push({tempId:uid(), file:f, dataURL, mime:f.type, kind:isAudio?'voice':'wallpaper', rarityId: state.rarities[0]?.id||'', name:f.name.replace(/\.[^.]+$/,'')});
+  }
+  e.target.value=''; renderPendingFiles();
+});
+function populateQuicksetRarity(){
+  const sel=document.getElementById('quicksetRarity'); sel.innerHTML='';
+  state.rarities.forEach(r=>{ const opt=document.createElement('option'); opt.value=r.id; opt.textContent=r.name; sel.appendChild(opt); });
+}
+document.getElementById('applyQuicksetBtn').addEventListener('click', ()=>{
+  const kind=document.getElementById('quicksetKind').value;
+  const rarityId=document.getElementById('quicksetRarity').value;
+  pendingPoolFiles.forEach(pf=>{ pf.kind=kind; pf.rarityId=rarityId; });
+  renderPendingFiles();
+});
+function renderPendingFiles(){
+  const wrap=document.getElementById('pendingFilesList'); wrap.innerHTML='';
+  const quickset=document.getElementById('quicksetRow'); const commitBtn=document.getElementById('commitPoolBtn');
+  if(pendingPoolFiles.length===0){ quickset.style.display='none'; commitBtn.style.display='none'; return; }
+  quickset.style.display='flex'; commitBtn.style.display='block';
+  populateQuicksetRarity();
+  pendingPoolFiles.forEach(pf=>{
+    const row=document.createElement('div'); row.className='pending-file-row';
+    const thumb=document.createElement('div'); thumb.className='thumb';
+    if(pf.mime.startsWith('audio')){ thumb.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:100%;height:100%;padding:8px;color:var(--blue-accent);"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>'; }
+    else { const img=document.createElement('img'); img.src=pf.dataURL; thumb.appendChild(img); }
+    row.appendChild(thumb);
+    const fname=document.createElement('div'); fname.className='fname'; fname.textContent=pf.name; row.appendChild(fname);
+    const kindSel=document.createElement('select');
+    const kindOpts = pf.mime.startsWith('audio') ? [['voice','Voice Line'],['treat','Treat']] : [['wallpaper','Wallpaper'],['character','Character']];
+    kindOpts.forEach(([v,l])=>{ const o=document.createElement('option'); o.value=v; o.textContent=l; if(v===pf.kind) o.selected=true; kindSel.appendChild(o); });
+    kindSel.addEventListener('change', ()=>{ pf.kind=kindSel.value; });
+    row.appendChild(kindSel);
+    const raritySel=document.createElement('select');
+    state.rarities.forEach(r=>{ const o=document.createElement('option'); o.value=r.id; o.textContent=r.name; if(r.id===pf.rarityId) o.selected=true; raritySel.appendChild(o); });
+    raritySel.addEventListener('change', ()=>{ pf.rarityId=raritySel.value; });
+    row.appendChild(raritySel);
+    const rm=document.createElement('div'); rm.className='rm'; rm.style.position='static';
+    rm.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" style="width:12px;height:12px;"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+    rm.addEventListener('click', ()=>{ pendingPoolFiles=pendingPoolFiles.filter(x=>x.tempId!==pf.tempId); renderPendingFiles(); });
+    row.appendChild(rm);
+    wrap.appendChild(row);
+  });
+}
+document.getElementById('commitPoolBtn').addEventListener('click', async()=>{
+  for(const pf of pendingPoolFiles){
+    const item={id:uid(), kind:pf.kind, name:pf.name, dataURL:pf.dataURL, mime:pf.mime, rarityId:pf.rarityId, unlocked:false};
+    await dbPut('pool',item); state.pool.push(item);
+  }
+  showToast(`Added ${pendingPoolFiles.length} item${pendingPoolFiles.length===1?'':'s'} to pool`);
+  pendingPoolFiles=[]; renderPendingFiles(); renderPoolList(); renderRarityRatesRow();
+});
+function renderPoolList(){
+  const list=document.getElementById('poolList'); list.innerHTML='';
+  if(state.pool.length===0){ list.innerHTML='<p style="color:var(--text-soft);font-size:13px;">No pool items yet — bulk import some above.</p>'; return; }
+  state.pool.slice().sort((a,b)=>a.unlocked-b.unlocked).forEach(item=>{
+    const rarity=rarityFor(item.rarityId);
+    const row=document.createElement('div'); row.className='pool-row';
+    const thumb=document.createElement('div'); thumb.className='thumb';
+    if(item.mime && item.mime.startsWith('audio')){ thumb.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:100%;height:100%;padding:7px;color:var(--blue-accent);"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>'; }
+    else { const img=document.createElement('img'); img.src=item.dataURL; thumb.appendChild(img); }
+    row.appendChild(thumb);
+    const pname=document.createElement('div'); pname.className='pname'; pname.textContent=item.name; row.appendChild(pname);
+    const ptag=document.createElement('span'); ptag.className='ptag'; ptag.textContent=rarity?rarity.name:'?';
+    ptag.style.background=rarity?rarity.color+'22':'#eee'; ptag.style.color=rarity?rarity.color:'#888';
+    row.appendChild(ptag);
+    const lockstate=document.createElement('div'); lockstate.className='lockstate'; lockstate.textContent=item.unlocked?'🔓':'🔒'; row.appendChild(lockstate);
+    const rm=document.createElement('div'); rm.className='rm';
+    rm.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+    rm.addEventListener('click', async()=>{ await dbDelete('pool',item.id); state.pool=state.pool.filter(x=>x.id!==item.id); renderPoolList(); renderCollectionSummary(); });
+    row.appendChild(rm);
+    list.appendChild(row);
+  });
+}
+
+document.querySelectorAll('.modal-overlay').forEach(ov=>{ ov.addEventListener('click', e=>{ if(e.target===ov) ov.classList.remove('active'); }); });
 
 boot();
 </script>
