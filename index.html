@@ -1131,9 +1131,9 @@ function populateCategorySelect(){
 function categoryFor(id){ return state.categories.find(c=>c.id===id); }
 function renderTasks(){
   const list=document.getElementById('taskList'); list.innerHTML='';
-  let tasks=state.tasks;
+  let tasks=state.tasks.filter(t=>!t.claimed);
   if(state.activeCategory!=='all') tasks=tasks.filter(t=>t.categoryId===state.activeCategory);
-  tasks=tasks.slice().sort((a,b)=>(a.claimed-b.claimed)||(b.createdAt-a.createdAt));
+  tasks=tasks.slice().sort((a,b)=>(b.createdAt-a.createdAt));
   if(tasks.length===0){
     const empty=document.createElement('div'); empty.className='empty-state';
     empty.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><b>No tasks here yet</b><span>Tap the + button to create one, Sensei.</span>`;
