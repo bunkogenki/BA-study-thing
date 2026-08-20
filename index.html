@@ -205,10 +205,11 @@
   .task-action-btn.claimed{background:#e5e9f1;color:var(--text-soft);cursor:default;}
   .task-del{position:absolute;top:8px;right:8px;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text-soft);cursor:pointer;opacity:.3;}
   .task-reorder{display:flex;flex-direction:column;gap:3px;flex-shrink:0;}
-  .task-reorder button{width:22px;height:18px;border:none;background:#eef2f7;border-radius:5px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-mid);padding:0;}
-  .task-reorder button:hover:not(:disabled){background:#dde5f0;}
-  .task-reorder button:disabled{opacity:.25;cursor:default;}
-  .task-reorder svg{width:11px;height:11px;}
+  .task-drag-handle{width:24px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--text-soft);cursor:grab;touch-action:none;flex-shrink:0;}
+  .task-drag-handle:hover{background:#eef2f7;color:var(--text-mid);}
+  .task-drag-handle svg{width:15px;height:15px;}
+  .task-card.dragging{box-shadow:var(--shadow-pop);cursor:grabbing;position:relative;z-index:40;}
+  .task-card.drop-target{outline:2px dashed var(--blue-accent);outline-offset:-2px;}
   .task-del:hover{opacity:1;background:#fbe3e6;color:#e0455a;}
   .task-del svg{width:11px;height:11px;}
 
@@ -752,7 +753,7 @@ function formatShortDate(dateStr){
   return dt.toLocaleDateString(undefined,{month:'short',day:'numeric'});
 }
 const DEFAULT_RARITIES=[{id:'n',name:'N',rate:60,color:'#8891a3'},{id:'r',name:'R',rate:30,color:'#3d8bfd'},{id:'sr',name:'SR',rate:8,color:'#7c5cff'},{id:'ssr',name:'SSR',rate:2,color:'#ffd23f'}];
-let pendingCrop={zoom:100,posY:50};
+let expandedSubtaskIds = new Set();
 let pendingPoolFiles=[]; // {tempId, file, dataURL, mime, kind, rarityId, name}
 
 /* ============================================================ Boot ============================================================ */
@@ -1150,7 +1151,7 @@ function renderTasks(){
       const hasSubtasks = t.subtasks && t.subtasks.length>0;
       const effTarget = hasSubtasks ? t.subtasks.length : t.target;
       const effCount = hasSubtasks ? t.subtasks.filter(s=>s.done).length : t.count;
-      const card=document.createElement('div'); card.className='task-card'+(t.claimed?' claimed':'');
+      const card=document.createElement('div'); card.className='task-card'+(t.claimed?' claimed':''); card.dataset.taskId=t.id;
       const pct=Math.min(100, Math.round((effCount/effTarget)*100));
       const canClaim=effCount>=effTarget && !t.claimed;
       const repeatLabel = !t.recurrence||t.recurrence.type==='none' ? '' :
@@ -1165,8 +1166,7 @@ function renderTasks(){
         <div class="task-del" data-id="${t.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M6 6l12 12M18 6L6 18"/></svg></div>
         <div class="task-edit" data-edit="${t.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg></div>
         <div class="task-reorder">
-          <button data-moveup="${t.id}" ${idx===0?'disabled':''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M6 15l6-6 6 6"/></svg></button>
-          <button data-movedown="${t.id}" ${idx===tasks.length-1?'disabled':''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M6 9l6 6 6-6"/></svg></button>
+          <div class="task-drag-handle" data-drag="${t.id}"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="8" cy="6" r="1.6"/><circle cx="16" cy="6" r="1.6"/><circle cx="8" cy="12" r="1.6"/><circle cx="16" cy="12" r="1.6"/><circle cx="8" cy="18" r="1.6"/><circle cx="16" cy="18" r="1.6"/></svg></div>
         </div>
         <div class="task-card-left">
           <div class="task-top-row">
@@ -1175,8 +1175,8 @@ function renderTasks(){
             ${repeatLabel?`<span class="task-repeat-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 12a9 9 0 11-3-6.7"/><path d="M21 3v6h-6"/></svg>${repeatLabel}</span>`:''}
             ${carriedOver?`<span class="task-repeat-badge" style="color:#e0455a;">From ${formatShortDate(t.originDate)}</span>`:''}
           </div>
-          ${hasSubtasks?`<div class="subtask-toggle" data-toggle="${t.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M9 6l6 6-6 6"/></svg>${effCount}/${effTarget} subtasks</div>
-          <div class="subtask-list" id="subtasks-${t.id}">${subtaskRows}</div>`
+          ${hasSubtasks?`<div class="subtask-toggle${expandedSubtaskIds.has(t.id)?' open':''}" data-toggle="${t.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M9 6l6 6-6 6"/></svg>${effCount}/${effTarget} subtasks</div>
+          <div class="subtask-list${expandedSubtaskIds.has(t.id)?' open':''}" id="subtasks-${t.id}">${subtaskRows}</div>`
           : `<div class="task-count-row"><span class="count-label">Count</span><span class="count-value">${effCount} / ${effTarget}</span></div>`}
           <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
         </div>
@@ -1193,11 +1193,12 @@ function renderTasks(){
     list.querySelectorAll('[data-claim]').forEach(btn=>btn.addEventListener('click', ()=>claimTask(btn.dataset.claim)));
     list.querySelectorAll('.task-del').forEach(btn=>btn.addEventListener('click', ()=>deleteTask(btn.dataset.id)));
     list.querySelectorAll('.task-edit').forEach(btn=>btn.addEventListener('click', ()=>openTaskModal(btn.dataset.edit)));
-    list.querySelectorAll('[data-moveup]').forEach(btn=>btn.addEventListener('click', ()=>moveTask(btn.dataset.moveup,'up')));
-    list.querySelectorAll('[data-movedown]').forEach(btn=>btn.addEventListener('click', ()=>moveTask(btn.dataset.movedown,'down')));
+    list.querySelectorAll('[data-drag]').forEach(handle=>handle.addEventListener('pointerdown', onTaskDragStart));
     list.querySelectorAll('.subtask-toggle').forEach(btn=>btn.addEventListener('click', ()=>{
+      const id=btn.dataset.toggle;
+      if(expandedSubtaskIds.has(id)) expandedSubtaskIds.delete(id); else expandedSubtaskIds.add(id);
       btn.classList.toggle('open');
-      document.getElementById('subtasks-'+btn.dataset.toggle).classList.toggle('open');
+      document.getElementById('subtasks-'+id).classList.toggle('open');
     }));
     list.querySelectorAll('[data-subtask]').forEach(cb=>cb.addEventListener('change', ()=>{
       const [taskId, subId]=cb.dataset.subtask.split('|');
@@ -1257,17 +1258,52 @@ async function toggleSubtask(taskId, subId){
 }
 async function claimTask(id){ const t=state.tasks.find(x=>x.id===id); if(!t||t.claimed) return; t.claimed=true; await dbPut('tasks',t); await addCurrency(t.reward); renderTasks(); renderCategoryTabs(); showToast(`+${t.reward} claimed!`); }
 async function deleteTask(id){ await dbDelete('tasks',id); state.tasks=state.tasks.filter(t=>t.id!==id); renderTasks(); renderCategoryTabs(); }
-async function moveTask(id, direction){
-  let tasks=state.tasks.filter(t=>!t.claimed);
-  if(state.activeCategory!=='all') tasks=tasks.filter(t=>t.categoryId===state.activeCategory);
-  tasks=tasks.slice().sort((a,b)=>taskOrderValue(a)-taskOrderValue(b));
-  const idx=tasks.findIndex(t=>t.id===id); if(idx<0) return;
-  const swapIdx = direction==='up' ? idx-1 : idx+1;
-  if(swapIdx<0 || swapIdx>=tasks.length) return;
-  const a=tasks[idx], b=tasks[swapIdx];
-  const aOrder=taskOrderValue(a), bOrder=taskOrderValue(b);
-  a.order=bOrder; b.order=aOrder;
-  await dbPut('tasks',a); await dbPut('tasks',b);
+let taskDrag=null;
+function onTaskDragStart(e){
+  e.preventDefault();
+  const handle=e.currentTarget;
+  const card=handle.closest('.task-card');
+  const list=document.getElementById('taskList');
+  card.classList.add('dragging');
+  taskDrag={ card, list, startY:e.clientY, startTop:card.getBoundingClientRect().top };
+  handle.setPointerCapture(e.pointerId);
+  document.addEventListener('pointermove', onTaskDragMove);
+  document.addEventListener('pointerup', onTaskDragEnd);
+}
+function onTaskDragMove(e){
+  if(!taskDrag) return;
+  const dy=e.clientY-taskDrag.startY;
+  taskDrag.card.style.transform=`translateY(${dy}px)`;
+  const siblings=Array.from(taskDrag.list.querySelectorAll('.task-card')).filter(c=>c!==taskDrag.card);
+  const cardRect=taskDrag.card.getBoundingClientRect();
+  const cardMid=cardRect.top+cardRect.height/2;
+  for(const sib of siblings){
+    const sibRect=sib.getBoundingClientRect();
+    const sibMid=sibRect.top+sibRect.height/2;
+    const cardIsAfterSib = !!(taskDrag.card.compareDocumentPosition(sib) & Node.DOCUMENT_POSITION_PRECEDING);
+    if(cardMid < sibMid && cardIsAfterSib){
+      taskDrag.list.insertBefore(taskDrag.card, sib);
+      break;
+    } else if(cardMid > sibMid && !cardIsAfterSib){
+      taskDrag.list.insertBefore(taskDrag.card, sib.nextSibling);
+      break;
+    }
+  }
+}
+async function onTaskDragEnd(){
+  if(!taskDrag) return;
+  const {card, list}=taskDrag;
+  card.style.transform='';
+  card.classList.remove('dragging');
+  document.removeEventListener('pointermove', onTaskDragMove);
+  document.removeEventListener('pointerup', onTaskDragEnd);
+  const finalCards=Array.from(list.querySelectorAll('.task-card'));
+  for(let i=0;i<finalCards.length;i++){
+    const id=finalCards[i].dataset.taskId;
+    const t=state.tasks.find(x=>x.id===id);
+    if(t){ t.order=i; await dbPut('tasks',t); }
+  }
+  taskDrag=null;
   renderTasks();
 }
 
