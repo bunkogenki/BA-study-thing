@@ -1274,17 +1274,16 @@ function onTaskDragMove(e){
   if(!taskDrag) return;
   const dy=e.clientY-taskDrag.startY;
   taskDrag.card.style.transform=`translateY(${dy}px)`;
+  const cursorY=e.clientY;
   const siblings=Array.from(taskDrag.list.querySelectorAll('.task-card')).filter(c=>c!==taskDrag.card);
-  const cardRect=taskDrag.card.getBoundingClientRect();
-  const cardMid=cardRect.top+cardRect.height/2;
   for(const sib of siblings){
     const sibRect=sib.getBoundingClientRect();
     const sibMid=sibRect.top+sibRect.height/2;
     const cardIsAfterSib = !!(taskDrag.card.compareDocumentPosition(sib) & Node.DOCUMENT_POSITION_PRECEDING);
-    if(cardMid < sibMid && cardIsAfterSib){
+    if(cursorY < sibMid && cardIsAfterSib){
       taskDrag.list.insertBefore(taskDrag.card, sib);
       break;
-    } else if(cardMid > sibMid && !cardIsAfterSib){
+    } else if(cursorY > sibMid && !cardIsAfterSib){
       taskDrag.list.insertBefore(taskDrag.card, sib.nextSibling);
       break;
     }
