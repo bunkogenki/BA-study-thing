@@ -233,6 +233,18 @@
   /* ===================== GACHA (Recruit) ===================== */
   #gachaView{background:var(--bg-soft);}
   .gacha-hero{flex:1;overflow-y:auto;padding:18px;}
+
+  #notesView{background:var(--bg-soft);}
+  .notes-body{flex:1;display:flex;flex-direction:column;overflow:hidden;padding:14px 18px 18px;}
+  .notes-tabs{display:flex;gap:7px;overflow-x:auto;flex-shrink:0;margin-bottom:12px;}
+  .notes-tab{font-family:'Baloo 2';font-weight:700;font-size:13.5px;padding:9px 16px;border-radius:11px;cursor:pointer;white-space:nowrap;background:#fff;color:var(--text-mid);border:1px solid var(--pill-border);flex-shrink:0;display:flex;align-items:center;gap:6px;}
+  .notes-tab.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+  .notes-tab .rm{width:14px;height:14px;display:flex;align-items:center;justify-content:center;opacity:.6;}
+  .notes-tab .rm:hover{opacity:1;}
+  .notes-tab .rm svg{width:10px;height:10px;}
+  .notes-tab.add-tab{color:var(--blue-accent-dark);border-style:dashed;}
+  .notes-textarea{flex:1;width:100%;border-radius:var(--radius-md);border:1px solid var(--pill-border);background:#fff;box-shadow:var(--shadow-card);padding:16px;font-family:'Nunito';font-size:14.5px;color:var(--text-dark);resize:none;line-height:1.5;}
+  .notes-textarea:focus{outline:2px solid var(--blue-accent);outline-offset:-2px;}
   .rarity-rates-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
   .rarity-chip{display:flex;align-items:center;gap:6px;background:#fff;border-radius:999px;padding:6px 12px;box-shadow:var(--shadow-card);font-family:'Baloo 2';font-weight:700;font-size:12.5px;}
   .rarity-swatch{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
@@ -424,7 +436,7 @@
           <div class="nav-item"><div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.7 6.3a1 1 0 010 1.4l-7 7a1 1 0 01-1.4 0l-2-2a1 1 0 010-1.4l7-7a1 1 0 011.4 0z"/><path d="M3 21l3-1 8-8-2-2-8 8z"/></svg></div><span>Crafting</span></div>
           <div class="nav-item"><div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l1-5h16l1 5"/><path d="M4 9h16v9a2 2 0 01-2 2H6a2 2 0 01-2-2z"/><path d="M9 13a3 3 0 006 0"/></svg></div><span>Shop</span></div>
           <div class="nav-item clickable" id="recruitNav"><div class="float-pill orange">Unique!</div><div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8l9-5 9 5-9 5-9-5z"/><path d="M3 8v8l9 5 9-5V8"/></svg></div><span>Recruit</span></div>
-          <div class="nav-item campaign"><div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg></div><span>Campaign</span></div>
+          <div class="nav-item campaign clickable" id="campaignNav"><div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg></div><span>Campaign</span></div>
         </div>
       </div>
     </div>
@@ -522,6 +534,20 @@
     </div>
   </div>
 
+  <!-- ===== NOTES (Campaign) ===== -->
+  <div class="view" id="notesView">
+    <div class="tasks-header">
+      <div class="back-circle" id="backToHome3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 6l-6 6 6 6"/></svg></div>
+      <h1>Notes</h1>
+      <div class="spacer"></div>
+      <div class="plain-icon-btn" id="homeIconBtn3" title="Home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg></div>
+    </div>
+    <div class="notes-body">
+      <div class="notes-tabs" id="notesTabs"></div>
+      <textarea class="notes-textarea" id="notesTextarea" placeholder="Start writing..."></textarea>
+    </div>
+  </div>
+
   <!-- ===== MODAL: manage wallpapers ===== -->
   <div class="modal-overlay" id="wallpaperModal">
     <div class="modal-box">
@@ -545,6 +571,25 @@
         <div class="crop-preview"><img id="cropPreviewImg" src=""></div>
         <div class="slider-row"><label>Zoom</label><input type="range" id="zoomSlider" min="40" max="300" value="100"></div>
         <div class="slider-row"><label>Vertical pos</label><input type="range" id="posYSlider" min="0" max="100" value="50"></div>
+      </div>
+      <div class="field" id="spritesField" style="display:none;">
+        <label>Sprites (poses/expressions — tap one to make it the current look)</label>
+        <div class="thumb-grid" id="spriteThumbGrid"></div>
+        <input type="file" id="spriteFileInput" accept="image/*" style="display:none;">
+      </div>
+      <div class="field" id="rewardSpriteField" style="display:none;">
+        <label>Flash this sprite briefly when I claim a reward</label>
+        <select id="rewardSpriteSelect"></select>
+      </div>
+      <div class="field">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+          <input type="checkbox" id="randomCharToggle" style="width:16px;height:16px;accent-color:var(--blue-accent);">
+          Randomize which character shows each time I open Tasks
+        </label>
+      </div>
+      <div class="field" id="randomCharListField" style="display:none;">
+        <label>Eligible for random (none checked = all owned)</label>
+        <div id="randomCharChecklist" style="display:flex;flex-direction:column;gap:6px;max-height:150px;overflow-y:auto;"></div>
       </div>
       <div class="field">
         <label>Name (active character)</label>
@@ -711,14 +756,14 @@
 
 <script>
 /* ============================================================ IndexedDB ============================================================ */
-const DB_NAME='senseisDeskDB', DB_VERSION=2;
+const DB_NAME='senseisDeskDB', DB_VERSION=3;
 let db;
 function openDB(){
   return new Promise((resolve,reject)=>{
     const req=indexedDB.open(DB_NAME,DB_VERSION);
     req.onupgradeneeded=(e)=>{
       const d=e.target.result;
-      ['wallpapers','tasks','categories','dialogues','meta','rarities','pool','characters','treats'].forEach(name=>{
+      ['wallpapers','tasks','categories','dialogues','meta','rarities','pool','characters','treats','notes'].forEach(name=>{
         if(!d.objectStoreNames.contains(name)) d.createObjectStore(name, {keyPath: name==='meta' ? 'key' : 'id'});
       });
     };
@@ -741,6 +786,8 @@ let state = {
   categories:[], activeCategory:'all', tasks:[],
   characters:[], activeCharacterId:null, dialogues:[],
   rarities:[], pool:[], treats:[], dailyBonusClaimedDate:'',
+  notes:[], activeNoteId:null,
+  randomCharacterEnabled:true, randomCharacterAllowedIds:[],
 };
 const DEFAULT_CATEGORIES=[{id:'daily',name:'Daily',color:'daily'},{id:'weekly',name:'Weekly',color:'weekly'},{id:'monthly',name:'Monthly',color:'monthly'},{id:'achievement',name:'Long Term',color:'achievement'}];
 const WEEKDAY_NAMES=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
@@ -767,24 +814,36 @@ async function boot(){
   state.rarities=await dbGetAll('rarities');
   state.pool=await dbGetAll('pool');
   state.treats=await dbGetAll('treats');
+  state.notes=await dbGetAll('notes');
+  if(state.notes.length===0){
+    const firstNote={id:uid(), title:'Notes', content:'', order:0};
+    await dbPut('notes', firstNote); state.notes=[firstNote];
+  }
   if(state.categories.length===0){ for(const c of DEFAULT_CATEGORIES) await dbPut('categories',c); state.categories=DEFAULT_CATEGORIES.slice(); }
   if(state.rarities.length===0){ for(const r of DEFAULT_RARITIES) await dbPut('rarities',r); state.rarities=DEFAULT_RARITIES.slice(); }
   const activeIdRow=await dbGet('meta','activeCharacterId');
   state.activeCharacterId = activeIdRow ? activeIdRow.value : (state.characters[0]?.id || null);
+  const activeNoteRow=await dbGet('meta','activeNoteId');
+  state.activeNoteId = activeNoteRow ? activeNoteRow.value : state.notes[0].id;
   const curRow=await dbGet('meta','currency');
   state.currency = curRow ? curRow.value : 0;
   const bonusRow=await dbGet('meta','dailyBonusClaimedDate');
   state.dailyBonusClaimedDate = bonusRow ? bonusRow.value : '';
+  const randEnabledRow=await dbGet('meta','randomCharacterEnabled');
+  state.randomCharacterEnabled = randEnabledRow ? randEnabledRow.value : true;
+  const randAllowedRow=await dbGet('meta','randomCharacterAllowedIds');
+  state.randomCharacterAllowedIds = randAllowedRow ? randAllowedRow.value : [];
 
   await checkRecurringTasks();
 
   renderWallpaper(); renderCurrency(); renderCharacter(); renderCategoryTabs(); renderTasks();
-  populateCategorySelect(); renderRarityRatesRow(); renderCollectionSummary();
+  populateCategorySelect(); renderRarityRatesRow(); renderCollectionSummary(); renderNotesTabs();
 }
 
 async function checkRecurringTasks(){
   const today=todayStr();
   const now=new Date();
+  const spawned=[];
   for(const t of state.tasks){
     if(!t.recurrence || t.recurrence.type==='none') continue;
     if(t.lastResetDate===today) continue;
@@ -797,16 +856,29 @@ async function checkRecurringTasks(){
       due = now.getDate()===targetDay;
     }
     if(!due) continue;
-    const wasIncomplete = !t.claimed;
     if(t.claimed){
       // completed — fresh reset for the new occurrence
       t.count=0; t.claimed=false; t.lastResetDate=today; t.originDate=today;
       if(t.subtasks) t.subtasks.forEach(s=>{s.done=false; s.rewarded=false;});
       await dbPut('tasks', t);
-    } else if(wasIncomplete && t.remaining){
-      // carry over as-is, just mark it as processed for today; originDate stays put so the card can show "From <date>"
+    } else if(t.remaining){
+      // leave yesterday's incomplete copy exactly as-is (still shows "From <date>"),
+      // detach it from the recurrence so it doesn't keep re-triggering, then spawn
+      // a fresh occurrence that carries the recurrence forward.
+      const origRecurrence = {...t.recurrence};
       t.lastResetDate=today;
+      t.recurrence={type:'none'};
       await dbPut('tasks', t);
+      const fresh={
+        id:uid(), title:t.title, categoryId:t.categoryId,
+        target: t.subtasks ? t.subtasks.length : t.target,
+        reward:t.reward, count:0, claimed:false, createdAt:Date.now(),
+        subtasks: t.subtasks ? t.subtasks.map(s=>({id:uid(), text:s.text, done:false, rewarded:false})) : undefined,
+        recurrence: origRecurrence, remaining:t.remaining,
+        originDate: today, lastResetDate: today,
+      };
+      await dbPut('tasks', fresh);
+      spawned.push(fresh);
     } else {
       // not remaining and incomplete — clears with no reward, replaced by a fresh occurrence
       t.count=0; t.claimed=false; t.lastResetDate=today; t.originDate=today;
@@ -814,6 +886,7 @@ async function checkRecurringTasks(){
       await dbPut('tasks', t);
     }
   }
+  state.tasks.push(...spawned);
 }
 
 let toastTimer;
@@ -825,10 +898,23 @@ function showToast(msg){
 }
 
 /* Navigation */
+function maybeRandomizeCharacter(){
+  if(!state.randomCharacterEnabled || state.characters.length===0) return;
+  let eligible = state.characters;
+  if(state.randomCharacterAllowedIds && state.randomCharacterAllowedIds.length){
+    const allowed = state.characters.filter(c=>state.randomCharacterAllowedIds.includes(c.id));
+    if(allowed.length) eligible = allowed;
+  }
+  if(eligible.length===0) return;
+  const pick = eligible[trueRandomInt(eligible.length)];
+  state.activeCharacterId = pick.id;
+  dbPut('meta',{key:'activeCharacterId', value:pick.id});
+}
 function switchView(id){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   if(id==='gachaView'){ renderRarityRatesRow(); renderCollectionSummary(); }
+  if(id==='tasksView'){ maybeRandomizeCharacter(); renderCharacter(); }
 }
 document.getElementById('taskIcon').addEventListener('click', ()=>switchView('tasksView'));
 document.getElementById('lessonNav').addEventListener('click', ()=>switchView('tasksView'));
@@ -844,6 +930,9 @@ document.getElementById('backToHome2').addEventListener('click', ()=>switchView(
 document.getElementById('homeIconBtn2').addEventListener('click', ()=>switchView('homeView'));
 document.getElementById('recruitNav').addEventListener('click', ()=>switchView('gachaView'));
 document.getElementById('pyroxeneIcon').addEventListener('click', ()=>switchView('gachaView'));
+document.getElementById('campaignNav').addEventListener('click', ()=>{ switchView('notesView'); renderNotesTabs(); });
+document.getElementById('backToHome3').addEventListener('click', ()=>switchView('homeView'));
+document.getElementById('homeIconBtn3').addEventListener('click', ()=>switchView('homeView'));
 
 /* Currency */
 function renderCurrency(){
@@ -912,6 +1001,29 @@ function renderWallpaperThumbs(){
 
 /* Characters + dialogue + crop */
 function activeCharacter(){ return state.characters.find(c=>c.id===state.activeCharacterId) || null; }
+function getCharSprites(ch){
+  if(!ch.sprites || !ch.sprites.length) return [{id:'default', dataURL:ch.imageDataURL, label:'Normal'}];
+  return ch.sprites;
+}
+function activeSpriteURL(ch){
+  const sprites=getCharSprites(ch);
+  const active=sprites.find(s=>s.id===ch.activeSpriteId) || sprites[0];
+  return active.dataURL;
+}
+let rewardReactionTimeout=null;
+function triggerRewardReaction(){
+  const ch=activeCharacter();
+  if(!ch || !ch.rewardSpriteId) return;
+  const sprites=getCharSprites(ch);
+  const rewardSprite=sprites.find(s=>s.id===ch.rewardSpriteId);
+  if(!rewardSprite) return;
+  const img=document.querySelector('#charImgWrap .char-img');
+  if(!img) return;
+  const normalSrc=activeSpriteURL(ch);
+  img.src=rewardSprite.dataURL;
+  clearTimeout(rewardReactionTimeout);
+  rewardReactionTimeout=setTimeout(()=>{ if(img.isConnected) img.src=normalSrc; }, 2500);
+}
 function applyCharCrop(imgEl, character){
   if(!imgEl||!character) return;
   const zoom=(character.zoom||100)/100, posY=character.posY!=null?character.posY:50;
@@ -922,7 +1034,7 @@ function renderCharacter(){
   const wrap=document.getElementById('charImgWrap'); wrap.innerHTML='';
   const ch=activeCharacter();
   if(ch && ch.imageDataURL){
-    const img=document.createElement('img'); img.className='char-img'; img.src=ch.imageDataURL; wrap.appendChild(img); applyCharCrop(img,ch);
+    const img=document.createElement('img'); img.className='char-img'; img.src=activeSpriteURL(ch); wrap.appendChild(img); applyCharCrop(img,ch);
   } else {
     wrap.innerHTML=`<div class="char-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0116 0v1"/></svg><span>Tap to add a character</span></div>`;
   }
@@ -954,9 +1066,90 @@ function openCharModal(){
   const ch=activeCharacter();
   document.getElementById('charNameInput').value=ch?.name||'';
   pendingCrop={zoom:ch?.zoom||100, posY:ch?.posY!=null?ch.posY:50};
-  renderCharThumb(); renderDialogueList(); updateCropEditor();
+  renderCharThumb(); renderDialogueList(); updateCropEditor(); renderSpriteSection(); renderRandomCharSettings();
   document.getElementById('charModal').classList.add('active');
 }
+function renderRandomCharSettings(){
+  document.getElementById('randomCharToggle').checked = !!state.randomCharacterEnabled;
+  document.getElementById('randomCharListField').style.display = state.randomCharacterEnabled ? 'block' : 'none';
+  const list=document.getElementById('randomCharChecklist'); list.innerHTML='';
+  if(!state.characters.length){ list.innerHTML='<p style="color:var(--text-soft);font-size:12.5px;">No characters owned yet.</p>'; return; }
+  state.characters.forEach(c=>{
+    const row=document.createElement('label'); row.style.cssText='display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;';
+    const cb=document.createElement('input'); cb.type='checkbox';
+    cb.checked = state.randomCharacterAllowedIds.includes(c.id);
+    cb.style.cssText='width:15px;height:15px;accent-color:var(--blue-accent);flex-shrink:0;';
+    cb.addEventListener('change', async()=>{
+      if(cb.checked){ if(!state.randomCharacterAllowedIds.includes(c.id)) state.randomCharacterAllowedIds.push(c.id); }
+      else { state.randomCharacterAllowedIds=state.randomCharacterAllowedIds.filter(id=>id!==c.id); }
+      await dbPut('meta',{key:'randomCharacterAllowedIds', value: state.randomCharacterAllowedIds});
+    });
+    const img=document.createElement('img'); img.src=c.imageDataURL; img.style.cssText='width:26px;height:26px;border-radius:7px;object-fit:cover;flex-shrink:0;';
+    const span=document.createElement('span'); span.textContent=c.name||'Unnamed';
+    row.appendChild(cb); row.appendChild(img); row.appendChild(span);
+    list.appendChild(row);
+  });
+}
+document.getElementById('randomCharToggle').addEventListener('change', async(e)=>{
+  state.randomCharacterEnabled=e.target.checked;
+  await dbPut('meta',{key:'randomCharacterEnabled', value: state.randomCharacterEnabled});
+  document.getElementById('randomCharListField').style.display = state.randomCharacterEnabled ? 'block' : 'none';
+});
+function renderSpriteSection(){
+  const ch=activeCharacter();
+  const spritesField=document.getElementById('spritesField');
+  const rewardField=document.getElementById('rewardSpriteField');
+  if(!ch || !ch.imageDataURL){ spritesField.style.display='none'; rewardField.style.display='none'; return; }
+  spritesField.style.display='block'; rewardField.style.display='block';
+  const sprites=getCharSprites(ch);
+  const activeId=ch.activeSpriteId || sprites[0].id;
+  const grid=document.getElementById('spriteThumbGrid'); grid.innerHTML='';
+  sprites.forEach(s=>{
+    const t=document.createElement('div'); t.className='thumb'; t.title=s.label;
+    if(s.id===activeId) t.style.borderColor='var(--blue-accent)';
+    const img=document.createElement('img'); img.src=s.dataURL; t.appendChild(img);
+    t.addEventListener('click', async()=>{
+      ch.activeSpriteId=s.id; await dbPut('characters',ch); renderCharacter(); renderSpriteSection();
+    });
+    if(sprites.length>1){
+      const rm=document.createElement('div'); rm.className='rm';
+      rm.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+      rm.addEventListener('click', async(ev)=>{
+        ev.stopPropagation();
+        const remaining=sprites.filter(x=>x.id!==s.id);
+        ch.sprites=remaining;
+        if(ch.activeSpriteId===s.id) ch.activeSpriteId=remaining[0].id;
+        if(ch.rewardSpriteId===s.id) ch.rewardSpriteId=null;
+        await dbPut('characters',ch); renderCharacter(); renderSpriteSection();
+      });
+      t.appendChild(rm);
+    }
+    grid.appendChild(t);
+  });
+  const upload=document.createElement('div'); upload.className='upload-tile';
+  upload.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>';
+  upload.addEventListener('click', ()=>document.getElementById('spriteFileInput').click());
+  grid.appendChild(upload);
+
+  const sel=document.getElementById('rewardSpriteSelect'); sel.innerHTML='';
+  const noneOpt=document.createElement('option'); noneOpt.value=''; noneOpt.textContent='None'; sel.appendChild(noneOpt);
+  sprites.forEach(s=>{ const o=document.createElement('option'); o.value=s.id; o.textContent=s.label; if(ch.rewardSpriteId===s.id) o.selected=true; sel.appendChild(o); });
+}
+document.getElementById('spriteFileInput').addEventListener('change', async(e)=>{
+  const f=e.target.files[0]; if(!f) return;
+  const ch=activeCharacter(); if(!ch){ e.target.value=''; return; }
+  const dataURL=await fileToDataURL(f);
+  const label=window.prompt('Label this sprite (e.g. Smiling, Surprised):','Smiling') || 'Sprite';
+  if(!ch.sprites) ch.sprites=getCharSprites(ch);
+  ch.sprites.push({id:uid(), dataURL, label});
+  await dbPut('characters',ch);
+  e.target.value=''; renderSpriteSection();
+});
+document.getElementById('rewardSpriteSelect').addEventListener('change', async(e)=>{
+  const ch=activeCharacter(); if(!ch) return;
+  ch.rewardSpriteId=e.target.value||null;
+  await dbPut('characters',ch);
+});
 function updateCropEditor(){
   const editor=document.getElementById('cropEditor'); const ch=activeCharacter();
   if(ch&&ch.imageDataURL){
@@ -980,7 +1173,7 @@ function renderCharThumb(){
       state.activeCharacterId=c.id; await dbPut('meta',{key:'activeCharacterId',value:c.id});
       document.getElementById('charNameInput').value=c.name||'';
       pendingCrop={zoom:c.zoom||100, posY:c.posY!=null?c.posY:50};
-      renderCharThumb(); renderCharacter(); updateCropEditor();
+      renderCharThumb(); renderCharacter(); updateCropEditor(); renderSpriteSection();
     });
     const rm=document.createElement('div'); rm.className='rm';
     rm.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 6l12 12M18 6L6 18"/></svg>';
@@ -1048,6 +1241,54 @@ function updateTreatsBadge(){
   const badge=document.getElementById('treatsBadge');
   if(state.treats.length){ badge.style.display='flex'; badge.textContent=state.treats.length; } else { badge.style.display='none'; }
 }
+
+/* Notes (Campaign) */
+function activeNote(){ return state.notes.find(n=>n.id===state.activeNoteId) || state.notes[0]; }
+function renderNotesTabs(){
+  const wrap=document.getElementById('notesTabs'); wrap.innerHTML='';
+  state.notes.slice().sort((a,b)=>a.order-b.order).forEach(n=>{
+    const tab=document.createElement('div'); tab.className='notes-tab'+(n.id===state.activeNoteId?' active':'');
+    const label=document.createElement('span'); label.textContent=n.title||'Untitled'; tab.appendChild(label);
+    if(state.notes.length>1){
+      const rm=document.createElement('div'); rm.className='rm';
+      rm.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+      rm.addEventListener('click', async(ev)=>{
+        ev.stopPropagation();
+        await dbDelete('notes', n.id);
+        state.notes=state.notes.filter(x=>x.id!==n.id);
+        if(state.activeNoteId===n.id){ state.activeNoteId=state.notes[0].id; await dbPut('meta',{key:'activeNoteId',value:state.activeNoteId}); }
+        renderNotesTabs(); loadActiveNoteContent();
+      });
+      tab.appendChild(rm);
+    }
+    tab.addEventListener('click', async()=>{
+      state.activeNoteId=n.id; await dbPut('meta',{key:'activeNoteId',value:n.id});
+      renderNotesTabs(); loadActiveNoteContent();
+    });
+    wrap.appendChild(tab);
+  });
+  const addTab=document.createElement('div'); addTab.className='notes-tab add-tab'; addTab.textContent='+ New';
+  addTab.addEventListener('click', async()=>{
+    const title=window.prompt('Name this note tab:','New note') || 'Untitled';
+    const note={id:uid(), title, content:'', order: state.notes.length};
+    await dbPut('notes',note); state.notes.push(note);
+    state.activeNoteId=note.id; await dbPut('meta',{key:'activeNoteId',value:note.id});
+    renderNotesTabs(); loadActiveNoteContent();
+  });
+  wrap.appendChild(addTab);
+  loadActiveNoteContent();
+}
+function loadActiveNoteContent(){
+  const n=activeNote();
+  document.getElementById('notesTextarea').value = n ? n.content : '';
+}
+let notesSaveTimer=null;
+document.getElementById('notesTextarea').addEventListener('input', (e)=>{
+  const n=activeNote(); if(!n) return;
+  n.content=e.target.value;
+  clearTimeout(notesSaveTimer);
+  notesSaveTimer=setTimeout(async()=>{ await dbPut('notes', n); }, 400);
+});
 
 /* Students = character collection, Shop = wallpaper collection */
 document.getElementById('studentsNav').addEventListener('click', openStudentsModal);
@@ -1158,7 +1399,7 @@ function renderTasks(){
         t.recurrence.type==='daily' ? 'Daily repeat' :
         t.recurrence.type==='weekly' ? `Weekly · ${WEEKDAY_NAMES[t.recurrence.weekday].slice(0,3)}` :
         `Monthly · day ${t.recurrence.dayOfMonth}`;
-      const carriedOver = t.originDate && t.originDate!==todayStr() && !t.claimed;
+      const carriedOver = t.categoryId==='daily' && t.originDate && t.originDate!==todayStr() && !t.claimed;
       const subtaskRows = hasSubtasks ? t.subtasks.map(s=>`
         <div class="subtask-row${s.done?' done':''}"><input type="checkbox" data-subtask="${t.id}|${s.id}" ${s.done?'checked':''}><span>${escapeHtml(s.text)}</span></div>
       `).join('') : '';
@@ -1229,6 +1470,7 @@ function renderFooterRow(){
     state.dailyBonusClaimedDate=todayStr();
     await dbPut('meta',{key:'dailyBonusClaimedDate', value: state.dailyBonusClaimedDate});
     await addCurrency(DAILY_BONUS_AMOUNT);
+    triggerRewardReaction();
     showToast(`+${DAILY_BONUS_AMOUNT} claimed!`);
     renderFooterRow(); updateLessonPill();
   };
@@ -1250,13 +1492,13 @@ async function toggleSubtask(taskId, subId){
     const isLast = t.count===t.target;
     const payout = isLast ? (t.reward - per*(t.subtasks.length-1)) : per;
     s.rewarded=true;
-    if(payout>0){ await addCurrency(payout); showToast(`+${payout}`); }
+    if(payout>0){ await addCurrency(payout); triggerRewardReaction(); showToast(`+${payout}`); }
   }
   if(t.count>=t.target && !t.claimed){ t.claimed=true; }
 
   await dbPut('tasks',t); renderTasks(); renderCategoryTabs(); updateLessonPill();
 }
-async function claimTask(id){ const t=state.tasks.find(x=>x.id===id); if(!t||t.claimed) return; t.claimed=true; await dbPut('tasks',t); await addCurrency(t.reward); renderTasks(); renderCategoryTabs(); showToast(`+${t.reward} claimed!`); }
+async function claimTask(id){ const t=state.tasks.find(x=>x.id===id); if(!t||t.claimed) return; t.claimed=true; await dbPut('tasks',t); await addCurrency(t.reward); triggerRewardReaction(); renderTasks(); renderCategoryTabs(); showToast(`+${t.reward} claimed!`); }
 async function deleteTask(id){ await dbDelete('tasks',id); state.tasks=state.tasks.filter(t=>t.id!==id); renderTasks(); renderCategoryTabs(); }
 let taskDrag=null;
 function onTaskDragStart(e){
@@ -1265,26 +1507,32 @@ function onTaskDragStart(e){
   const card=handle.closest('.task-card');
   const list=document.getElementById('taskList');
   card.classList.add('dragging');
-  taskDrag={ card, list, startY:e.clientY, startTop:card.getBoundingClientRect().top };
+  const grabOffsetY = e.clientY - card.getBoundingClientRect().top;
+  taskDrag={ card, list, grabOffsetY };
   handle.setPointerCapture(e.pointerId);
   document.addEventListener('pointermove', onTaskDragMove);
   document.addEventListener('pointerup', onTaskDragEnd);
 }
 function onTaskDragMove(e){
   if(!taskDrag) return;
-  const dy=e.clientY-taskDrag.startY;
-  taskDrag.card.style.transform=`translateY(${dy}px)`;
+  const card=taskDrag.card;
+  const prevTransform=card.style.transform;
+  card.style.transform='none';
+  const naturalTop=card.getBoundingClientRect().top;
+  card.style.transform=prevTransform;
+  const desiredTop = e.clientY - taskDrag.grabOffsetY;
+  card.style.transform=`translateY(${desiredTop - naturalTop}px)`;
   const cursorY=e.clientY;
-  const siblings=Array.from(taskDrag.list.querySelectorAll('.task-card')).filter(c=>c!==taskDrag.card);
+  const siblings=Array.from(taskDrag.list.querySelectorAll('.task-card')).filter(c=>c!==card);
   for(const sib of siblings){
     const sibRect=sib.getBoundingClientRect();
     const sibMid=sibRect.top+sibRect.height/2;
-    const cardIsAfterSib = !!(taskDrag.card.compareDocumentPosition(sib) & Node.DOCUMENT_POSITION_PRECEDING);
+    const cardIsAfterSib = !!(card.compareDocumentPosition(sib) & Node.DOCUMENT_POSITION_PRECEDING);
     if(cursorY < sibMid && cardIsAfterSib){
-      taskDrag.list.insertBefore(taskDrag.card, sib);
+      taskDrag.list.insertBefore(card, sib);
       break;
     } else if(cursorY > sibMid && !cardIsAfterSib){
-      taskDrag.list.insertBefore(taskDrag.card, sib.nextSibling);
+      taskDrag.list.insertBefore(card, sib.nextSibling);
       break;
     }
   }
