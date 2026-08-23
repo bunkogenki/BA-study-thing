@@ -853,6 +853,13 @@ function dbDelete(store,key){ return new Promise((resolve,reject)=>{ const req=t
 function dbClear(store){ return new Promise((resolve,reject)=>{ const req=tx(store,'readwrite').clear(); req.onsuccess=()=>resolve(); req.onerror=reject; }); }
 function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,8); }
 function fileToDataURL(file){ return new Promise((resolve,reject)=>{ const r=new FileReader(); r.onload=()=>resolve(r.result); r.onerror=reject; r.readAsDataURL(file); }); }
+function mediaURL(item){
+  if(item.blob){
+    if(!item._objURLCache) item._objURLCache = URL.createObjectURL(item.blob);
+    return item._objURLCache;
+  }
+  return item.dataURL;
+}
 function escapeHtml(str){ const d=document.createElement('div'); d.textContent=str; return d.innerHTML; }
 
 /* ============================================================ State ============================================================ */
@@ -1296,7 +1303,7 @@ function openTreatsModal(){
       const row=document.createElement('div'); row.className='treat-row';
       const play=document.createElement('div'); play.className='play-btn';
       play.innerHTML='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
-      play.addEventListener('click', ()=>{ const audio=new Audio(item.dataURL); audio.play().catch(()=>showToast('Could not play audio')); });
+      play.addEventListener('click', ()=>{ const audio=new Audio(mediaURL(item)); audio.play().catch(()=>showToast('Could not play audio')); });
       const span=document.createElement('span'); span.textContent=item.name||(item.kind==='voice'?'Voice line':'Treat');
       row.appendChild(play); row.appendChild(span); list.appendChild(row);
     });
@@ -1315,7 +1322,8 @@ function openTreatsModal(){
 }
 function updateTreatsBadge(){
   const badge=document.getElementById('treatsBadge');
-  if(state.treats.length){ badge.style.display='flex'; badge.textContent=state.treats.length; } else { badge.style.display='none'; }
+  const count = state.pool.filter(p=>(p.kind==='voice'||p.kind==='treat') && p.unlocked).length;
+  if(count){ badge.style.display='flex'; badge.textContent=count; } else { badge.style.display='none'; }
 }
 
 /* Notes (Campaign) */
@@ -1758,8 +1766,7 @@ async function unlockPoolItem(item){
     const d={id:uid(), text:'🔊 '+(item.name||'Voice line')};
     await dbPut('dialogues',d); state.dialogues.push(d); renderCharacter();
   } else if(item.kind==='treat'){
-    const t={id:uid(), name:item.name||'Treat', dataURL:item.dataURL};
-    await dbPut('treats',t); state.treats.push(t); updateTreatsBadge();
+    updateTreatsBadge();
   }
 }
 async function doPull(count){
@@ -1873,7 +1880,8 @@ document.getElementById('poolUploadBtn').addEventListener('click', ()=>document.
 document.getElementById('poolFileInput').addEventListener('change', async(e)=>{
   const files=Array.from(e.target.files||[]);
   for(const f of files){
-    const dataURL=await fileToDataURL(f);
+    const isImage=f.type.startsWith('image');
+    const dataURL = isImage ? await fileToDataURL(f) : null;
     const defaultKind = f.type.startsWith('audio') ? 'voice' : f.type.startsWith('video') ? 'video' : 'wallpaper';
     pendingPoolFiles.push({tempId:uid(), file:f, dataURL, mime:f.type, kind:defaultKind, rarityId: state.rarities[0]?.id||'', name:f.name.replace(/\.[^.]+$/,'')});
   }
@@ -1921,7 +1929,9 @@ function renderPendingFiles(){
 }
 document.getElementById('commitPoolBtn').addEventListener('click', async()=>{
   for(const pf of pendingPoolFiles){
-    const item={id:uid(), kind:pf.kind, name:pf.name, dataURL:pf.dataURL, mime:pf.mime, rarityId:pf.rarityId, unlocked:false};
+    const isMedia = pf.mime.startsWith('audio') || pf.mime.startsWith('video');
+    const item={id:uid(), kind:pf.kind, name:pf.name, mime:pf.mime, rarityId:pf.rarityId, unlocked:false};
+    if(isMedia){ item.blob=pf.file; } else { item.dataURL=pf.dataURL; }
     await dbPut('pool',item); state.pool.push(item);
   }
   showToast(`Added ${pendingPoolFiles.length} item${pendingPoolFiles.length===1?'':'s'} to pool`);
@@ -2051,14 +2061,14 @@ function showRewardTakeover(item){
   if(item.kind==='video'){
     audioCard.style.display='none';
     videoEl.style.display='block';
-    videoEl.src=item.dataURL;
+    videoEl.src=mediaURL(item);
     videoEl.onended=closeRewardTakeover;
     videoEl.play().catch(()=>{});
   } else {
     videoEl.style.display='none';
     audioCard.style.display='flex';
     document.getElementById('rewardTakeoverName').textContent = item.name || 'Reward';
-    const audio=new Audio(item.dataURL);
+    const audio=new Audio(mediaURL(item));
     currentRewardAudio=audio;
     audio.onended=closeRewardTakeover;
     audio.play().catch(()=>{});
