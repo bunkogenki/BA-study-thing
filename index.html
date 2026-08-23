@@ -811,6 +811,11 @@
       <button class="btn primary" id="exportBackupBtn" style="width:100%;margin-bottom:10px;">Download Backup</button>
       <button class="btn secondary" id="importBackupBtn" style="width:100%;">Restore From Backup...</button>
       <input type="file" id="importBackupFileInput" accept="application/json,.json" style="display:none;">
+      <div style="border-top:1px solid var(--pill-border);margin:18px 0 14px;"></div>
+      <p style="color:var(--text-mid);font-size:12.5px;margin:0 0 10px;">
+        If the app is lagging or crashing your browser, it's almost always because the gacha pool has large video/audio files stuck in it from before an update. This wipes the pool only — your tasks, wallpapers, characters, and notes are untouched.
+      </p>
+      <button class="btn secondary" id="emergencyClearPoolBtn" style="width:100%;color:#e0455a;border-color:#f3c6cc;">Emergency: Clear Gacha Pool</button>
       <div class="modal-actions" style="margin-top:16px;"><button class="btn secondary" id="closeBackupModal">Close</button></div>
     </div>
   </div>
@@ -886,6 +891,17 @@ let expandedSubtaskIds = new Set();
 let pendingPoolFiles=[]; // {tempId, file, dataURL, mime, kind, rarityId, name}
 
 /* ============================================================ Boot ============================================================ */
+let poolLoadPromise=null;
+async function ensurePoolLoaded(){
+  if(state._poolLoaded) return;
+  if(!poolLoadPromise){
+    poolLoadPromise=(async()=>{
+      state.pool=await dbGetAll('pool');
+      state._poolLoaded=true;
+    })();
+  }
+  await poolLoadPromise;
+}
 async function boot(){
   await openDB();
   state.wallpapers=await dbGetAll('wallpapers');
@@ -894,7 +910,7 @@ async function boot(){
   state.categories=await dbGetAll('categories');
   state.characters=await dbGetAll('characters');
   state.rarities=await dbGetAll('rarities');
-  state.pool=await dbGetAll('pool');
+  // pool is NOT loaded eagerly — it can contain large media and is loaded on demand (see ensurePoolLoaded)
   state.treats=await dbGetAll('treats');
   state.notes=await dbGetAll('notes');
   if(state.notes.length===0){
@@ -992,10 +1008,10 @@ function maybeRandomizeCharacter(){
   state.activeCharacterId = pick.id;
   dbPut('meta',{key:'activeCharacterId', value:pick.id});
 }
-function switchView(id){
+async function switchView(id){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  if(id==='gachaView'){ renderRarityRatesRow(); renderCollectionSummary(); }
+  if(id==='gachaView'){ await ensurePoolLoaded(); renderRarityRatesRow(); renderCollectionSummary(); }
   if(id==='tasksView'){ maybeRandomizeCharacter(); renderCharacter(); }
 }
 document.getElementById('taskIcon').addEventListener('click', ()=>switchView('tasksView'));
@@ -1292,7 +1308,8 @@ async function addDialogueLine(){
 /* Treats jukebox */
 document.getElementById('treatsIcon').addEventListener('click', openTreatsModal);
 document.getElementById('closeTreatsModal').addEventListener('click', ()=>document.getElementById('treatsModal').classList.remove('active'));
-function openTreatsModal(){
+async function openTreatsModal(){
+  await ensurePoolLoaded();
   const list=document.getElementById('treatsList'); list.innerHTML='';
   const audioPool=state.pool.filter(p=>p.kind==='voice'||p.kind==='treat');
   const owned=audioPool.filter(p=>p.unlocked), locked=audioPool.filter(p=>!p.unlocked);
@@ -1380,7 +1397,8 @@ document.getElementById('closeStudentsModal').addEventListener('click', ()=>docu
 document.getElementById('formationNav').addEventListener('click', openShopModal);
 document.getElementById('closeShopModal').addEventListener('click', ()=>document.getElementById('shopModal').classList.remove('active'));
 
-function openStudentsModal(){
+async function openStudentsModal(){
+  await ensurePoolLoaded();
   const charPool=state.pool.filter(p=>p.kind==='character');
   const owned=charPool.filter(p=>p.unlocked), locked=charPool.filter(p=>!p.unlocked);
   const ownedGrid=document.getElementById('ownedCharGrid'); ownedGrid.innerHTML='';
@@ -1403,7 +1421,8 @@ function openStudentsModal(){
   });
   document.getElementById('studentsModal').classList.add('active');
 }
-function openShopModal(){
+async function openShopModal(){
+  await ensurePoolLoaded();
   const wpPool=state.pool.filter(p=>p.kind==='wallpaper');
   const owned=wpPool.filter(p=>p.unlocked), locked=wpPool.filter(p=>!p.unlocked);
   const ownedGrid=document.getElementById('ownedWpGrid'); ownedGrid.innerHTML='';
@@ -1770,6 +1789,7 @@ async function unlockPoolItem(item){
   }
 }
 async function doPull(count){
+  await ensurePoolLoaded();
   const cost = count===10 ? PULL_COST_X10 : PULL_COST_X1*count;
   if(state.pool.length===0){ showToast('Add items to the pool first'); return; }
   if(state.currency<cost){ showToast('Not enough gems'); return; }
@@ -1837,7 +1857,8 @@ document.getElementById('pullX10Btn').addEventListener('click', ()=>doPull(10));
 /* Pool & rarity management modal */
 document.getElementById('managePoolBtn').addEventListener('click', openPoolModal);
 document.getElementById('closePoolModal').addEventListener('click', ()=>document.getElementById('poolModal').classList.remove('active'));
-function openPoolModal(){
+async function openPoolModal(){
+  await ensurePoolLoaded();
   renderRarityList(); renderPoolList(); pendingPoolFiles=[]; renderPendingFiles();
   document.getElementById('poolModal').classList.add('active');
 }
@@ -2132,6 +2153,14 @@ document.getElementById('importBackupFileInput').addEventListener('change', asyn
   } catch(err){
     showToast('Could not read that backup file');
   }
+});
+document.getElementById('emergencyClearPoolBtn').addEventListener('click', async()=>{
+  if(!window.confirm('This permanently deletes everything in your gacha pool (locked and unlocked) without loading it first. Your unlocked wallpapers, characters, and voice lines already in use stay put — only the pool itself is wiped. Continue?')) return;
+  await dbClear('pool');
+  state.pool=[];
+  state._poolLoaded=true;
+  renderCollectionSummary();
+  showToast('Gacha pool cleared');
 });
 
 boot();
