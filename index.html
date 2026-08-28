@@ -824,8 +824,8 @@
     <div class="modal-box">
       <h2>Backup &amp; Restore</h2>
       <p style="color:var(--text-mid);font-size:13.5px;margin:-8px 0 16px;">
-        Everything here — wallpapers, characters, tasks, your gacha pool, notes — lives in this browser only.
-        Download a backup regularly, especially before switching browsers, clearing site data, or opening a different copy of this file.
+        Everything here lives in this browser only. This backup covers your tasks, categories, notes, dialogue lines, and settings.
+        It does <b>not</b> include wallpapers, characters, or the gacha pool — those can involve large images, video, and audio that aren't safe to bundle into one download. Keep your original files somewhere safe if you want to re-import them later.
       </p>
       <button class="btn primary" id="exportBackupBtn" style="width:100%;margin-bottom:10px;">Download Backup</button>
       <button class="btn secondary" id="importBackupBtn" style="width:100%;">Restore From Backup...</button>
@@ -2141,11 +2141,16 @@ document.addEventListener('fullscreenchange', ()=>{
 
 /* ============================================================ Backup & Restore ============================================================ */
 const ALL_STORES=['wallpapers','tasks','categories','dialogues','rarities','pool','characters','treats','notes','meta'];
+const SAFE_BACKUP_STORES=['tasks','categories','dialogues','rarities','notes','meta'];
 document.getElementById('backupBtn').addEventListener('click', ()=>document.getElementById('backupModal').classList.add('active'));
 document.getElementById('closeBackupModal').addEventListener('click', ()=>document.getElementById('backupModal').classList.remove('active'));
 document.getElementById('exportBackupBtn').addEventListener('click', async()=>{
-  const backup={_exportedAt:new Date().toISOString()};
-  for(const s of ALL_STORES){ backup[s]=await dbGetAll(s); }
+  showToast('Preparing backup...');
+  const backup={
+    _exportedAt:new Date().toISOString(),
+    _note:'Wallpapers, characters, and the gacha pool (including any video/audio) are NOT included in this backup — they can be too large to safely handle in a browser tab. Re-add those manually through Manage Pool and pulling again after a restore.'
+  };
+  for(const s of SAFE_BACKUP_STORES){ backup[s]=await dbGetAll(s); }
   const blob=new Blob([JSON.stringify(backup)], {type:'application/json'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');
