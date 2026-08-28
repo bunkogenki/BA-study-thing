@@ -832,6 +832,13 @@
       <input type="file" id="importBackupFileInput" accept="application/json,.json" style="display:none;">
       <div style="border-top:1px solid var(--pill-border);margin:18px 0 14px;"></div>
       <p style="color:var(--text-mid);font-size:12.5px;margin:0 0 10px;">
+        Full backup — includes wallpapers, characters, and the gacha pool (video &amp; audio too). Writes straight to a file on disk instead of building it in memory, so it should handle large collections without crashing. Needs Chrome, Edge, or Opera.
+      </p>
+      <button class="btn primary" id="exportFullBackupBtn" style="width:100%;margin-bottom:10px;">Download Full Backup (with media)</button>
+      <button class="btn secondary" id="importFullBackupBtn" style="width:100%;">Restore Full Backup...</button>
+      <input type="file" id="importFullBackupFileInput" accept=".sdbk" style="display:none;">
+      <div style="border-top:1px solid var(--pill-border);margin:18px 0 14px;"></div>
+      <p style="color:var(--text-mid);font-size:12.5px;margin:0 0 10px;">
         If the app is lagging or crashing your browser, it's almost always because the gacha pool has large video/audio files stuck in it from before an update. This wipes the pool only — your tasks, wallpapers, characters, and notes are untouched.
       </p>
       <button class="btn secondary" id="emergencyClearPoolBtn" style="width:100%;color:#e0455a;border-color:#f3c6cc;">Emergency: Clear Gacha Pool</button>
@@ -883,6 +890,10 @@ function mediaURL(item){
     return item._objURLCache;
   }
   return item.dataURL;
+}
+async function dataURLToBlob(dataURL){
+  const res = await fetch(dataURL);
+  return await res.blob();
 }
 function escapeHtml(str){ const d=document.createElement('div'); d.textContent=str; return d.innerHTML; }
 
@@ -1073,7 +1084,7 @@ function renderWallpaper(){
   if(state.wallpaperIndex>=state.wallpapers.length) state.wallpaperIndex=0;
   const wp=state.wallpapers[state.wallpaperIndex];
   const el = wp.type.startsWith('video') ? document.createElement('video') : document.createElement('img');
-  el.src=wp.dataURL;
+  el.src=mediaURL(wp);
   if(wp.type.startsWith('video')){ el.autoplay=true; el.loop=true; el.muted=true; el.playsInline=true; }
   layer.appendChild(el);
   updateCharPanelBg();
@@ -1101,7 +1112,7 @@ function renderWallpaperThumbs(){
   state.wallpapers.forEach(wp=>{
     const t=document.createElement('div'); t.className='thumb';
     const el = wp.type.startsWith('video') ? document.createElement('video') : document.createElement('img');
-    el.src=wp.dataURL; if(wp.type.startsWith('video')) el.muted=true;
+    el.src=mediaURL(wp); if(wp.type.startsWith('video')) el.muted=true;
     t.appendChild(el);
     const rm=document.createElement('div'); rm.className='rm';
     rm.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 6l12 12M18 6L6 18"/></svg>';
@@ -2158,6 +2169,174 @@ document.getElementById('exportBackupBtn').addEventListener('click', async()=>{
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
   URL.revokeObjectURL(url);
   showToast('Backup downloaded');
+});
+
+/* ============================================================ Full backup (with media) — streamed to/from disk, never held whole in memory ============================================================ */
+const FULL_BACKUP_MAGIC='SDDXBK01';
+document.getElementById('exportFullBackupBtn').addEventListener('click', async()=>{
+  if(!window.showSaveFilePicker){
+    showToast("Full backup needs Chrome, Edge, or Opera — try the regular backup instead");
+    return;
+  }
+  let handle;
+  try{
+    handle=await window.showSaveFilePicker({
+      suggestedName:`senseis-desk-full-backup-${todayStr()}.sdbk`,
+      types:[{description:"Sensei's Desk Backup", accept:{'application/octet-stream':['.sdbk']}}]
+    });
+  } catch(err){ return; } // user cancelled the save dialog
+
+  showToast('Preparing full backup — this can take a bit for large collections...');
+  try{
+    const lightweight={};
+    for(const s of SAFE_BACKUP_STORES){ lightweight[s]=await dbGetAll(s); }
+
+    const wallpapers=await dbGetAll('wallpapers');
+    const characters=await dbGetAll('characters');
+    const pool=await dbGetAll('pool');
+
+    const mediaEntries=[]; // {mime, blob}
+    const wallpaperRows=[];
+    for(const wp of wallpapers){
+      const {dataURL, blob, ...rest}=wp;
+      let mediaBlob=blob;
+      if(!mediaBlob && dataURL){ mediaBlob=await dataURLToBlob(dataURL); }
+      const idx = mediaBlob ? mediaEntries.push({mime:mediaBlob.type||wp.type||'application/octet-stream', blob:mediaBlob})-1 : null;
+      wallpaperRows.push({...rest, _mediaIndex:idx});
+    }
+    const characterRows=[];
+    for(const ch of characters){
+      const {imageDataURL, sprites, ...rest}=ch;
+      let mainIndex=null;
+      if(imageDataURL){ const b=await dataURLToBlob(imageDataURL); mainIndex=mediaEntries.push({mime:b.type||'image/png', blob:b})-1; }
+      const spriteRefs=[];
+      if(Array.isArray(sprites)){
+        for(const sp of sprites){
+          const b=await dataURLToBlob(sp.dataURL);
+          const idx=mediaEntries.push({mime:b.type||'image/png', blob:b})-1;
+          spriteRefs.push({id:sp.id, label:sp.label, _mediaIndex:idx});
+        }
+      }
+      characterRows.push({...rest, _mediaIndex:mainIndex, _spriteMedia:spriteRefs});
+    }
+    const poolRows=[];
+    for(const item of pool){
+      const {dataURL, blob, ...rest}=item;
+      let mediaBlob=blob;
+      if(!mediaBlob && dataURL){ mediaBlob=await dataURLToBlob(dataURL); }
+      const idx = mediaBlob ? mediaEntries.push({mime:mediaBlob.type||item.mime||'application/octet-stream', blob:mediaBlob})-1 : null;
+      poolRows.push({...rest, _mediaIndex:idx});
+    }
+
+    let runningOffset=0;
+    const mediaManifest=mediaEntries.map(m=>{
+      const entry={mime:m.mime, byteOffset:runningOffset, byteLength:m.blob.size};
+      runningOffset+=m.blob.size;
+      return entry;
+    });
+
+    const manifest={
+      _exportedAt:new Date().toISOString(),
+      lightweight, wallpapers:wallpaperRows, characters:characterRows, pool:poolRows,
+      media:mediaManifest,
+    };
+    const manifestBytes=new TextEncoder().encode(JSON.stringify(manifest));
+    const headerBytes=new TextEncoder().encode(FULL_BACKUP_MAGIC);
+    const lenBuf=new Uint8Array(4);
+    new DataView(lenBuf.buffer).setUint32(0, manifestBytes.length, true);
+
+    const writable=await handle.createWritable();
+    await writable.write(headerBytes);
+    await writable.write(lenBuf);
+    await writable.write(manifestBytes);
+    for(const m of mediaEntries){ await writable.write(m.blob); }
+    await writable.close();
+    showToast('Full backup saved');
+  } catch(err){
+    console.error(err);
+    showToast('Full backup failed — try the regular backup instead');
+  }
+});
+
+document.getElementById('importFullBackupBtn').addEventListener('click', ()=>document.getElementById('importFullBackupFileInput').click());
+document.getElementById('importFullBackupFileInput').addEventListener('change', async(e)=>{
+  const file=e.target.files[0]; e.target.value='';
+  if(!file) return;
+  if(!window.confirm('This will replace everything currently in the app with the contents of this full backup. Continue?')) return;
+  try{
+    const headerBuf=await file.slice(0,8).arrayBuffer();
+    const header=new TextDecoder().decode(headerBuf);
+    if(header!==FULL_BACKUP_MAGIC){ showToast("That doesn't look like a full backup file"); return; }
+    const lenBuf=await file.slice(8,12).arrayBuffer();
+    const manifestLen=new DataView(lenBuf).getUint32(0, true);
+    const manifestText=await file.slice(12,12+manifestLen).text();
+    const manifest=JSON.parse(manifestText);
+    const mediaStart=12+manifestLen;
+
+    function sliceFor(mediaIndex){
+      if(mediaIndex==null) return null;
+      const m=manifest.media[mediaIndex];
+      if(!m) return null;
+      return file.slice(mediaStart+m.byteOffset, mediaStart+m.byteOffset+m.byteLength, m.mime);
+    }
+    function sliceToDataURL(blobSlice){
+      return new Promise((resolve,reject)=>{
+        const r=new FileReader();
+        r.onload=()=>resolve(r.result);
+        r.onerror=reject;
+        r.readAsDataURL(blobSlice);
+      });
+    }
+
+    for(const s of SAFE_BACKUP_STORES){
+      if(!Array.isArray(manifest.lightweight?.[s])) continue;
+      await dbClear(s);
+      for(const row of manifest.lightweight[s]){ await dbPut(s,row); }
+    }
+
+    await dbClear('wallpapers');
+    for(const row of manifest.wallpapers||[]){
+      const {_mediaIndex, ...rest}=row;
+      const slice=sliceFor(_mediaIndex);
+      if(slice){
+        if(slice.type && slice.type.startsWith('video')){ rest.blob=slice; }
+        else { rest.dataURL=await sliceToDataURL(slice); }
+      }
+      await dbPut('wallpapers', rest);
+    }
+
+    await dbClear('characters');
+    for(const row of manifest.characters||[]){
+      const {_mediaIndex, _spriteMedia, ...rest}=row;
+      const mainSlice=sliceFor(_mediaIndex);
+      if(mainSlice){ rest.imageDataURL=await sliceToDataURL(mainSlice); }
+      if(_spriteMedia && _spriteMedia.length){
+        rest.sprites=[];
+        for(const sp of _spriteMedia){
+          const spSlice=sliceFor(sp._mediaIndex);
+          rest.sprites.push({id:sp.id, label:sp.label, dataURL: spSlice ? await sliceToDataURL(spSlice) : null});
+        }
+      }
+      await dbPut('characters', rest);
+    }
+
+    await dbClear('pool');
+    for(const row of manifest.pool||[]){
+      const {_mediaIndex, ...rest}=row;
+      const slice=sliceFor(_mediaIndex);
+      if(slice){
+        if(rest.kind==='video' || rest.kind==='voice' || rest.kind==='treat'){ rest.blob=slice; }
+        else { rest.dataURL=await sliceToDataURL(slice); }
+      }
+      await dbPut('pool', rest);
+    }
+
+    showToast('Full backup restored — reloading...');
+    setTimeout(()=>location.reload(), 1200);
+  } catch(err){
+    console.error(err);
+    showToast('Could not read that full backup file');
+  }
 });
 document.getElementById('importBackupBtn').addEventListener('click', ()=>document.getElementById('importBackupFileInput').click());
 document.getElementById('importBackupFileInput').addEventListener('change', async(e)=>{
