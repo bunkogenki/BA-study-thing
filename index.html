@@ -407,6 +407,25 @@
 <body>
 <div class="app-shell" id="appShell">
 
+  <!-- ===== RECOVERY PANEL — always shown first, never touches heavy stores automatically ===== -->
+  <div id="recoveryPanel" style="position:fixed;inset:0;z-index:9999;background:#0f1a30;display:flex;align-items:center;justify-content:center;padding:20px;font-family:'Nunito',sans-serif;">
+    <div style="background:#fff;border-radius:20px;padding:26px;max-width:420px;width:100%;box-shadow:0 10px 30px rgba(0,0,0,0.4);">
+      <h2 style="font-family:'Baloo 2';font-size:20px;margin:0 0 10px;color:#1c2740;">Starting up</h2>
+      <p style="color:#5b6478;font-size:13.5px;line-height:1.5;margin:0 0 16px;">
+        Nothing has loaded yet — this screen never touches wallpapers or the gacha pool automatically, so it should always open instantly no matter how much data is stuck in there.
+        If the app has been crashing or lagging your browser, clear the likely culprit below <b>before</b> continuing.
+      </p>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
+        <button id="recoveryClearWallpapers" style="font-family:'Baloo 2';font-weight:700;font-size:13px;padding:10px;border-radius:10px;border:1.5px solid #f3c6cc;background:#fff;color:#e0455a;cursor:pointer;">Clear Wallpapers</button>
+        <button id="recoveryClearPool" style="font-family:'Baloo 2';font-weight:700;font-size:13px;padding:10px;border-radius:10px;border:1.5px solid #f3c6cc;background:#fff;color:#e0455a;cursor:pointer;">Clear Gacha Pool</button>
+        <button id="recoveryClearCharacters" style="font-family:'Baloo 2';font-weight:700;font-size:13px;padding:10px;border-radius:10px;border:1.5px solid #f3c6cc;background:#fff;color:#e0455a;cursor:pointer;">Clear Characters</button>
+        <button id="recoveryClearAll" style="font-family:'Baloo 2';font-weight:800;font-size:13px;padding:10px;border-radius:10px;border:none;background:#e0455a;color:#fff;cursor:pointer;">Full Reset (clear everything)</button>
+      </div>
+      <div id="recoveryStatus" style="font-size:12.5px;color:#3d8bfd;min-height:16px;margin-bottom:14px;"></div>
+      <button id="recoveryContinueBtn" style="width:100%;font-family:'Baloo 2';font-weight:800;font-size:15px;padding:13px;border-radius:12px;border:none;background:linear-gradient(180deg,#4fa0ff,#2a6fd6);color:#fff;cursor:pointer;">Continue to App</button>
+    </div>
+  </div>
+
   <!-- ===== HOME ===== -->
   <div class="view active" id="homeView">
     <div class="wallpaper-layer" id="wallpaperLayer">
@@ -2163,7 +2182,53 @@ document.getElementById('emergencyClearPoolBtn').addEventListener('click', async
   showToast('Gacha pool cleared');
 });
 
-boot();
+/* ============================================================ Recovery panel — runs BEFORE boot(), never reads heavy data ============================================================ */
+async function initRecoveryPanel(){
+  await openDB(); // cheap — just opens the connection, reads nothing
+  const statusEl=document.getElementById('recoveryStatus');
+  function setStatus(msg){ statusEl.textContent=msg; }
+
+  document.getElementById('recoveryClearWallpapers').addEventListener('click', async()=>{
+    if(!window.confirm('Clear all wallpapers? This cannot be undone.')) return;
+    setStatus('Clearing wallpapers...');
+    await dbClear('wallpapers');
+    setStatus('Wallpapers cleared.');
+  });
+  document.getElementById('recoveryClearPool').addEventListener('click', async()=>{
+    if(!window.confirm('Clear the entire gacha pool? This cannot be undone.')) return;
+    setStatus('Clearing gacha pool...');
+    await dbClear('pool');
+    setStatus('Gacha pool cleared.');
+  });
+  document.getElementById('recoveryClearCharacters').addEventListener('click', async()=>{
+    if(!window.confirm('Clear all characters and sprites? This cannot be undone.')) return;
+    setStatus('Clearing characters...');
+    await dbClear('characters');
+    await dbDelete('meta','activeCharacterId');
+    setStatus('Characters cleared.');
+  });
+  document.getElementById('recoveryClearAll').addEventListener('click', async()=>{
+    if(!window.confirm('This wipes EVERYTHING — wallpapers, characters, tasks, notes, the gacha pool, all of it. This cannot be undone. Continue?')) return;
+    setStatus('Clearing everything...');
+    for(const s of ['wallpapers','tasks','categories','dialogues','meta','rarities','pool','characters','treats','notes']){
+      await dbClear(s);
+    }
+    setStatus('Everything cleared. Starting fresh.');
+  });
+  document.getElementById('recoveryContinueBtn').addEventListener('click', async()=>{
+    const btn=document.getElementById('recoveryContinueBtn');
+    btn.textContent='Loading...'; btn.disabled=true;
+    const timeout=new Promise((_,reject)=>setTimeout(()=>reject(new Error('timeout')), 15000));
+    try{
+      await Promise.race([boot(), timeout]);
+      document.getElementById('recoveryPanel').style.display='none';
+    } catch(err){
+      setStatus('Still taking too long or hit a problem — try clearing wallpapers or the pool above, then Continue again.');
+      btn.textContent='Continue to App'; btn.disabled=false;
+    }
+  });
+}
+initRecoveryPanel();
 </script>
 </body>
 </html>
