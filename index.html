@@ -1791,7 +1791,7 @@ function weightedRarityPick(){
   const usable=state.rarities.filter(r=> state.pool.some(p=>p.rarityId===r.id));
   const total=usable.reduce((s,r)=>s+r.rate,0);
   if(total<=0) return null;
-  let roll=Math.random()*total;
+  let roll=trueRandomFloat()*total;
   for(const r of usable){ if(roll<r.rate) return r.id; roll-=r.rate; }
   return usable[usable.length-1]?.id || null;
 }
@@ -1829,7 +1829,7 @@ async function doPull(count){
     const rarityId=weightedRarityPick();
     if(!rarityId) break;
     const candidates=state.pool.filter(p=>p.rarityId===rarityId);
-    const item=candidates[Math.floor(Math.random()*candidates.length)];
+    const item=candidates[trueRandomInt(candidates.length)];
     if(item.unlocked){
       const refund=Math.round(PULL_COST_X1/3);
       await addCurrency(refund);
@@ -2021,6 +2021,14 @@ function trueRandomInt(maxExclusive){
     return Math.floor((buf[0]/4294967296)*maxExclusive);
   }
   return Math.floor(Math.random()*maxExclusive);
+}
+function trueRandomFloat(){
+  if(window.crypto && window.crypto.getRandomValues){
+    const buf=new Uint32Array(1);
+    window.crypto.getRandomValues(buf);
+    return buf[0]/4294967296;
+  }
+  return Math.random();
 }
 function startWallpaperAutoRotate(){
   setInterval(()=>{
