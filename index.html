@@ -878,6 +878,7 @@ function openDB(){
 }
 function tx(store,mode='readonly'){ return db.transaction(store,mode).objectStore(store); }
 function dbGetAll(store){ return new Promise((resolve,reject)=>{ const req=tx(store).getAll(); req.onsuccess=()=>resolve(req.result||[]); req.onerror=reject; }); }
+function dbGetAllKeys(store){ return new Promise((resolve,reject)=>{ const req=tx(store).getAllKeys(); req.onsuccess=()=>resolve(req.result||[]); req.onerror=reject; }); }
 function dbGet(store,key){ return new Promise((resolve,reject)=>{ const req=tx(store).get(key); req.onsuccess=()=>resolve(req.result); req.onerror=reject; }); }
 function dbPut(store,val){ return new Promise((resolve,reject)=>{ const req=tx(store,'readwrite').put(val); req.onsuccess=()=>resolve(val); req.onerror=reject; }); }
 function dbDelete(store,key){ return new Promise((resolve,reject)=>{ const req=tx(store,'readwrite').delete(key); req.onsuccess=()=>resolve(); req.onerror=reject; }); }
@@ -2180,7 +2181,8 @@ document.getElementById('exportBackupBtn').addEventListener('click', async()=>{
 });
 
 /* ============================================================ Full backup (with media) — streamed to/from disk, never held whole in memory ============================================================ */
-const FULL_BACKUP_MAGIC='SDDXBK01';
+const FULL_BACKUP_MAGIC='SDDXBK02'; // v2: media written first, manifest+trailer at the end — true single-pass streaming
+const FULL_BACKUP_MAGIC_V1='SDDXBK01'; // older format, kept for backward-compat on import only
 document.getElementById('exportFullBackupBtn').addEventListener('click', async()=>{
   if(!window.showSaveFilePicker){
     showToast("Full backup needs Chrome, Edge, or Opera — try the regular backup instead");
@@ -2194,54 +2196,60 @@ document.getElementById('exportFullBackupBtn').addEventListener('click', async()
     });
   } catch(err){ return; } // user cancelled the save dialog
 
-  showToast('Preparing full backup — this can take a bit for large collections...');
+  showToast('Preparing full backup — this can take a while for large collections, please keep this tab open...');
+  let writable=null;
   try{
+    writable=await handle.createWritable();
+    let runningOffset=0;
+    const mediaManifest=[]; // {mime, byteOffset, byteLength}
+    async function writeBlobTracked(blob){
+      await writable.write(blob);
+      mediaManifest.push({mime:blob.type||'application/octet-stream', byteOffset:runningOffset, byteLength:blob.size});
+      runningOffset += blob.size;
+      return mediaManifest.length-1;
+    }
+
+    // lightweight stores are always small — fine to grab in bulk
     const lightweight={};
     for(const s of SAFE_BACKUP_STORES){ lightweight[s]=await dbGetAll(s); }
 
-    const wallpapers=await dbGetAll('wallpapers');
-    const characters=await dbGetAll('characters');
-    const pool=await dbGetAll('pool');
-
-    const mediaEntries=[]; // {mime, blob}
+    // everything below processes ONE ROW AT A TIME — never more than one item's media in memory at once
     const wallpaperRows=[];
-    for(const wp of wallpapers){
+    for(const key of await dbGetAllKeys('wallpapers')){
+      const wp=await dbGet('wallpapers', key);
       const {dataURL, blob, ...rest}=wp;
       let mediaBlob=blob;
       if(!mediaBlob && dataURL){ mediaBlob=await dataURLToBlob(dataURL); }
-      const idx = mediaBlob ? mediaEntries.push({mime:mediaBlob.type||wp.type||'application/octet-stream', blob:mediaBlob})-1 : null;
+      const idx = mediaBlob ? await writeBlobTracked(mediaBlob) : null;
       wallpaperRows.push({...rest, _mediaIndex:idx});
     }
+
     const characterRows=[];
-    for(const ch of characters){
+    for(const key of await dbGetAllKeys('characters')){
+      const ch=await dbGet('characters', key);
       const {imageDataURL, sprites, ...rest}=ch;
       let mainIndex=null;
-      if(imageDataURL){ const b=await dataURLToBlob(imageDataURL); mainIndex=mediaEntries.push({mime:b.type||'image/png', blob:b})-1; }
+      if(imageDataURL){ const b=await dataURLToBlob(imageDataURL); mainIndex=await writeBlobTracked(b); }
       const spriteRefs=[];
       if(Array.isArray(sprites)){
         for(const sp of sprites){
           const b=await dataURLToBlob(sp.dataURL);
-          const idx=mediaEntries.push({mime:b.type||'image/png', blob:b})-1;
+          const idx=await writeBlobTracked(b);
           spriteRefs.push({id:sp.id, label:sp.label, _mediaIndex:idx});
         }
       }
       characterRows.push({...rest, _mediaIndex:mainIndex, _spriteMedia:spriteRefs});
     }
+
     const poolRows=[];
-    for(const item of pool){
+    for(const key of await dbGetAllKeys('pool')){
+      const item=await dbGet('pool', key);
       const {dataURL, blob, ...rest}=item;
       let mediaBlob=blob;
       if(!mediaBlob && dataURL){ mediaBlob=await dataURLToBlob(dataURL); }
-      const idx = mediaBlob ? mediaEntries.push({mime:mediaBlob.type||item.mime||'application/octet-stream', blob:mediaBlob})-1 : null;
+      const idx = mediaBlob ? await writeBlobTracked(mediaBlob) : null;
       poolRows.push({...rest, _mediaIndex:idx});
     }
-
-    let runningOffset=0;
-    const mediaManifest=mediaEntries.map(m=>{
-      const entry={mime:m.mime, byteOffset:runningOffset, byteLength:m.blob.size};
-      runningOffset+=m.blob.size;
-      return entry;
-    });
 
     const manifest={
       _exportedAt:new Date().toISOString(),
@@ -2249,20 +2257,19 @@ document.getElementById('exportFullBackupBtn').addEventListener('click', async()
       media:mediaManifest,
     };
     const manifestBytes=new TextEncoder().encode(JSON.stringify(manifest));
-    const headerBytes=new TextEncoder().encode(FULL_BACKUP_MAGIC);
     const lenBuf=new Uint8Array(4);
     new DataView(lenBuf.buffer).setUint32(0, manifestBytes.length, true);
+    const magicBytes=new TextEncoder().encode(FULL_BACKUP_MAGIC);
 
-    const writable=await handle.createWritable();
-    await writable.write(headerBytes);
-    await writable.write(lenBuf);
     await writable.write(manifestBytes);
-    for(const m of mediaEntries){ await writable.write(m.blob); }
+    await writable.write(lenBuf);
+    await writable.write(magicBytes);
     await writable.close();
     showToast('Full backup saved');
   } catch(err){
     console.error(err);
-    showToast('Full backup failed — try the regular backup instead');
+    try{ if(writable) await writable.abort(); }catch(e2){}
+    showToast('Full backup failed partway through — see the console (F12) for details, and let me know what it says');
   }
 });
 
@@ -2272,20 +2279,55 @@ document.getElementById('importFullBackupFileInput').addEventListener('change', 
   if(!file) return;
   if(!window.confirm('This will replace everything currently in the app with the contents of this full backup. Continue?')) return;
   try{
-    const headerBuf=await file.slice(0,8).arrayBuffer();
-    const header=new TextDecoder().decode(headerBuf);
-    if(header!==FULL_BACKUP_MAGIC){ showToast("That doesn't look like a full backup file"); return; }
-    const lenBuf=await file.slice(8,12).arrayBuffer();
-    const manifestLen=new DataView(lenBuf).getUint32(0, true);
-    const manifestText=await file.slice(12,12+manifestLen).text();
-    const manifest=JSON.parse(manifestText);
-    const mediaStart=12+manifestLen;
+    let manifest, mediaBaseOffset;
+
+    // try v2 format first: trailer at the end of the file (12 bytes: 4-byte manifest length + 8-byte magic)
+    if(file.size>=12){
+      const trailerBuf=await file.slice(file.size-12, file.size).arrayBuffer();
+      const trailerMagic=new TextDecoder().decode(new Uint8Array(trailerBuf, 4, 8));
+      if(trailerMagic===FULL_BACKUP_MAGIC){
+        const manifestLen=new DataView(trailerBuf).getUint32(0, true);
+        const manifestStart=file.size-12-manifestLen;
+        manifest=JSON.parse(await file.slice(manifestStart, manifestStart+manifestLen).text());
+        mediaBaseOffset=0; // media was written starting at byte 0 in v2
+      }
+    }
+
+    // fall back to v1 format: header at the start of the file (8-byte magic + 4-byte manifest length + manifest)
+    if(!manifest && file.size>=12){
+      const headerBuf=await file.slice(0,8).arrayBuffer();
+      const headerMagic=new TextDecoder().decode(headerBuf);
+      if(headerMagic===FULL_BACKUP_MAGIC_V1){
+        const lenBuf=await file.slice(8,12).arrayBuffer();
+        const manifestLen=new DataView(lenBuf).getUint32(0, true);
+        manifest=JSON.parse(await file.slice(12,12+manifestLen).text());
+        mediaBaseOffset=12+manifestLen;
+      }
+    }
+
+    if(!manifest){
+      // maybe they picked the lightweight .json backup by mistake — try that instead of just failing
+      try{
+        const text=await file.text();
+        const data=JSON.parse(text);
+        for(const s of SAFE_BACKUP_STORES){
+          if(!Array.isArray(data[s])) continue;
+          await dbClear(s);
+          for(const row of data[s]){ await dbPut(s, row); }
+        }
+        showToast('That was a lightweight backup, not a full one — restored what it had (tasks/notes/settings). Reloading...');
+        setTimeout(()=>location.reload(), 1600);
+      } catch(err2){
+        showToast("That file isn't a backup this app recognizes — check you picked the right file (.sdbk for full, .json for lightweight)");
+      }
+      return;
+    }
 
     function sliceFor(mediaIndex){
       if(mediaIndex==null) return null;
       const m=manifest.media[mediaIndex];
       if(!m) return null;
-      return file.slice(mediaStart+m.byteOffset, mediaStart+m.byteOffset+m.byteLength, m.mime);
+      return file.slice(mediaBaseOffset+m.byteOffset, mediaBaseOffset+m.byteOffset+m.byteLength, m.mime);
     }
     function sliceToDataURL(blobSlice){
       return new Promise((resolve,reject)=>{
